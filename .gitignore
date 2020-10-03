@@ -113,3 +113,10 @@ Thumbs.db
 /ios/xcode/native/
 /ios/IOSLauncher.app
 /ios/IOSLauncher.app.dSYM
+
+## Time Saver
+/android/assets/img/*
+!/android/assets/img/fnt/
+!/android/assets/img/skin.json
+/android/assets/bundle/properties.properties
+/android/assets/bundle/bundle.properties

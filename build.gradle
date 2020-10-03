@@ -1,6 +1,4 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -11,15 +9,43 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
-        
-
+        classpath "com.badlogicgames.gdx:gdx-tools:1.9.11"
     }
+}
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+
+task texturePacker {
+    doLast {
+        def settings = new TexturePacker.Settings()
+        settings.combineSubdirectories = true
+        logger.info "Calling TexturePacker: "+texturePacker
+        TexturePacker.processIfModified settings, "raw-img", "android/assets/img", "skin"
+    }
+}
+
+task createProperties {
+    doLast {
+        new File("$projectDir/android/assets/bundle/properties.properties").withWriter { w ->
+            Properties p = new Properties()
+            p['version'] = project.version.toString()
+            p['title'] = project.ext.title.toString()
+            p['package-name'] = project.ext.packageName.toString()
+            p.store w, null
+        }
+    }
+}
+
+task copyBundle(type: Copy) {
+    from file("$projectDir/android/assets/bundle/bundle_en.properties")
+    into file("$projectDir/android/assets/bundle")
+    rename ".+", "bundle.properties"
 }
 
 allprojects {
     apply plugin: "eclipse"
 
-    version = '1.0'
+    version = '1.0-dev'
     ext {
         appName = "Time Saver"
         gdxVersion = '1.9.11'
@@ -27,6 +53,8 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+        title = 'Time Saver'
+        packageName = 'com.wgsoft.game.timesaver'
     }
 
     repositories {
@@ -72,9 +100,11 @@ project(":android") {
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        
+    }
+
+    classes {
+        dependsOn texturePacker, createProperties, copyBundle
     }
 }
