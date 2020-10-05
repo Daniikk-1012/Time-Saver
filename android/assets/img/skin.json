@@ -1,2 +1,62 @@
 {
+  Color : {
+    font : {
+      hex : #EEEEEE
+    }
+    over : {
+      hex: #234C90
+    }
+    down : {
+      hex : #103167
+    }
+    menuFont : {
+      hex : #00ffd9
+    }
+  }
+  BitmapFont : {
+    boldestMedium : {
+      file : fnt/boldest.fnt
+      scaledSize : 45
+      markupEnabled : true
+    }
+    boldestLarge : {
+      file : fnt/boldest.fnt
+      scaledSize : 80
+      markupEnabled : true
+    }
+  }
+  LabelStyle : {
+    boldestMedium : {
+      font : boldestMedium
+      fontColor : font
+    }
+    boldestLarge : {
+      font : boldestLarge
+      fontColor : font
+    }
+  }
+  TextButtonStyle : {
+    boldestMedium : {
+      font : boldestMedium
+      fontColor : font
+      overFontColor : over
+      downFontColor : down
+    }
+    menuButton : {
+      font : boldestMedium
+      fontColor : menuFont
+      overFontColor : over
+      downFontColor : down
+    }
+  }
+  ProgressBarStyle : {
+    time : {}
+  }
+  CheckBoxStyle : {
+    inventory : {
+      font : boldestMedium
+      checkboxOn : check-box/inventory/on
+      checkboxOff : check-box/inventory/off
+    }
+  }
 }
