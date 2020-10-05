@@ -49,7 +49,7 @@ public class MenuScreen implements Screen, Localizable {
                 game.setScreen(game.gameScreen);
             }
         });
-        rootTable.add(startButton).pad(50f);
+        rootTable.add(startButton).pad(MENU_BUTTON_PADDING);
 
         rootTable.row();
 
@@ -60,7 +60,7 @@ public class MenuScreen implements Screen, Localizable {
                 Gdx.app.exit();
             }
         });
-        rootTable.add(exitButton).pad(50f);
+        rootTable.add(exitButton).pad(MENU_BUTTON_PADDING);
 
         uiStage.addActor(rootTable);
     }

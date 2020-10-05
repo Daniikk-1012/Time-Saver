@@ -12,7 +12,7 @@ public class Const {
     public static final float MENU_BUTTON_PADDING = 50f;
     public static final float GAME_BUTTON_PADDING_HORIZONTAL = 60f;
     public static final float GAME_BUTTON_PADDING_TOP = 50f;
-    public static final float GAME_PLAYER_MAX_TIME_DEFAULT = 50f; //TODO Remove
+    public static final float GAME_PLAYER_MAX_TIME_DEFAULT = 5f;
     public static final float GAME_TIME_PROGRESS_BAR_STEP = 0.005f;
     public static final float GAME_BUBBLE_SIZE_MIN = 450f;
     public static final float GAME_BUBBLE_SIZE_MAX = 1400f;

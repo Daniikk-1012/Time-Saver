@@ -47,7 +47,7 @@ task copyBundle(type: Copy) {
 allprojects {
     apply plugin: "eclipse"
 
-    version = '1.0-beta'
+    version = '1.0-beta1'
     ext {
         appName = "Time Saver"
         gdxVersion = '1.9.11'
