@@ -340,7 +340,6 @@ public class GameScreen implements Screen, Localizable {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(inputMultiplexer);
-        Gdx.gl.glClearColor(1f, 1f, 1f, 1f);
     }
 
     @Override

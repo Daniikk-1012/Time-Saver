@@ -48,6 +48,13 @@
       overFontColor : over
       downFontColor : down
     }
+    boldestLarge : {
+      font : boldestLarge
+      fontColor : font
+      overFontColor : over
+      downFontColor : down
+      up : html/shadow
+    }
   }
   ProgressBarStyle : {
     time : {}

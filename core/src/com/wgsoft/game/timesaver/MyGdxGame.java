@@ -1,5 +1,6 @@
 package com.wgsoft.game.timesaver;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -16,11 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.PropertiesUtils;
 import com.wgsoft.game.timesaver.screens.GameScreen;
+import com.wgsoft.game.timesaver.screens.HtmlScreen;
 import com.wgsoft.game.timesaver.screens.MenuScreen;
 
 import java.util.Locale;
-import java.util.Properties;
 
 import static com.wgsoft.game.timesaver.Const.*;
 
@@ -37,11 +39,12 @@ public class MyGdxGame extends Game implements Localizable{
 	public Sound respawnSound;
 
 	public Skin skin;
-	public Properties properties;
+	public ObjectMap<String, String> properties;
 	public I18NBundle bundle;
 
 	public Preferences prefs;
 
+	public HtmlScreen htmlScreen;
 	public MenuScreen menuScreen;
 	public GameScreen gameScreen;
 
@@ -53,14 +56,16 @@ public class MyGdxGame extends Game implements Localizable{
 	public void create() {
 		batch = new SpriteBatch();
 
-		slashSound = Gdx.audio.newSound(Gdx.files.internal("snd/slash.wav"));
-		monsterDeathSound = Gdx.audio.newSound(Gdx.files.internal("snd/monster-death.wav"));
-		timeOverSound = Gdx.audio.newSound(Gdx.files.internal("snd/time-over.wav"));
-		timeFillSound = Gdx.audio.newSound(Gdx.files.internal("snd/time-fill.wav"));
-		jumpSound = Gdx.audio.newSound(Gdx.files.internal("snd/jump.wav"));
-		deathSound = Gdx.audio.newSound(Gdx.files.internal("snd/death.wav"));
-		selectSound = Gdx.audio.newSound(Gdx.files.internal("snd/select.wav"));
-		respawnSound = Gdx.audio.newSound(Gdx.files.internal("snd/respawn.wav"));
+		if(Gdx.app.getType() != Application.ApplicationType.WebGL) {
+			slashSound = Gdx.audio.newSound(Gdx.files.internal("snd/slash.wav"));
+			monsterDeathSound = Gdx.audio.newSound(Gdx.files.internal("snd/monster-death.wav"));
+			timeOverSound = Gdx.audio.newSound(Gdx.files.internal("snd/time-over.wav"));
+			timeFillSound = Gdx.audio.newSound(Gdx.files.internal("snd/time-fill.wav"));
+			jumpSound = Gdx.audio.newSound(Gdx.files.internal("snd/jump.wav"));
+			deathSound = Gdx.audio.newSound(Gdx.files.internal("snd/death.wav"));
+			selectSound = Gdx.audio.newSound(Gdx.files.internal("snd/select.wav"));
+			respawnSound = Gdx.audio.newSound(Gdx.files.internal("snd/respawn.wav"));
+		}
 
 		skin = new Skin(Gdx.files.internal("img/skin.json"));
 		ObjectMap.Entries<String, BitmapFont> entries = new ObjectMap.Entries<>(skin.getAll(BitmapFont.class));
@@ -72,25 +77,30 @@ public class MyGdxGame extends Game implements Localizable{
 		}
 		skin.get("time", ProgressBar.ProgressBarStyle.class).knobBefore = skin.getTiledDrawable("progress-bar/time/knob-before");
 		skin.get("time", ProgressBar.ProgressBarStyle.class).knob = new BaseDrawable();
-		properties = new Properties();
+		properties = new ObjectMap<>();
 		try {
-			properties.load(Gdx.files.internal("bundle/properties.properties").read());
-
+			PropertiesUtils.load(properties, Gdx.files.internal("bundle/properties.properties").reader());
 		}catch (Exception ignored){
 		}
 
-		prefs = Gdx.app.getPreferences(properties.getProperty("package-name"));
+		prefs = Gdx.app.getPreferences(properties.get("package-name"));
 
+		htmlScreen = new HtmlScreen();
 		menuScreen = new MenuScreen();
 		gameScreen = new GameScreen();
 
 		init();
 
-		setScreen(menuScreen);
+		if(Gdx.app.getType() == Application.ApplicationType.WebGL){
+			setScreen(htmlScreen);
+		}else {
+			setScreen(menuScreen);
+		}
 	}
 
 	@Override
 	public void localize() {
+		htmlScreen.localize();
 		menuScreen.localize();
 		gameScreen.localize();
 	}
@@ -159,6 +169,7 @@ public class MyGdxGame extends Game implements Localizable{
 
 		skin.dispose();
 
+		htmlScreen.dispose();
 		menuScreen.dispose();
 		gameScreen.dispose();
 	}
