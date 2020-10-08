@@ -295,7 +295,12 @@ public class Player extends Actor {
                 toBack();
                 setAnimations(downAnimations);
             }
-        }), Actions.moveBy(0f, -(getY()+getHeight()*getScaleY()), GAME_PLAYER_DOWN_DURATION, Interpolation.pow2In))));
+        }), Actions.moveBy(0f, -(getY()+getHeight()*getScaleY()), GAME_PLAYER_DOWN_DURATION, Interpolation.pow2In), Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                game.setScreen(game.menuScreen);
+            }
+        }))));
     }
 
     public boolean isNotMoving(){

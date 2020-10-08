@@ -301,7 +301,6 @@ public class GameScreen implements Screen, Localizable {
         }
         gameStage.clear();
         Ground ground = new Ground();
-        gameStage.addActor(ground);
         gameStage.addActor(new Track(2660f, ground.getTop()));
         gameStage.addActor(new Shop(4370f, ground.getTop()));
         player = new Player(maxTime);
@@ -311,6 +310,7 @@ public class GameScreen implements Screen, Localizable {
         gameStage.addActor(hatch);
         gameStage.setKeyboardFocus(player);
         gameStage.addActor(player);
+        gameStage.addActor(ground);
         gameStage.addActor(new Scientist(player, bubble, 1800f, 0f, false));
         gameStage.addActor(new Scientist(player, bubble, 2670f, 0f, false));
         gameStage.addActor(new Scientist(player, bubble, 2960f, 0f, true));
@@ -400,7 +400,7 @@ public class GameScreen implements Screen, Localizable {
         }
         backgroundStage.getViewport().update(width, height, true);
         buildingsStage.getViewport().update(width, height);
-        buildingsStage.getCamera().position.y = gameStage.getViewport().getWorldHeight()/2f;
+        buildingsStage.getCamera().position.y = buildingsStage.getViewport().getWorldHeight()/2f;
         gameStage.getViewport().update(width, height);
         gameStage.getCamera().position.y = gameStage.getViewport().getWorldHeight()/2f;
         uiStage.getViewport().update(width, height, true);
