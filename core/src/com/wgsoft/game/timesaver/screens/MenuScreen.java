@@ -16,13 +16,13 @@ import com.wgsoft.game.timesaver.Localizable;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class MenuScreen implements Screen, Localizable {
-    private Stage backgroundStage;
-    private Stage uiStage;
+    private final Stage backgroundStage;
+    private final Stage uiStage;
 
-    private InputMultiplexer inputMultiplexer;
+    private final InputMultiplexer inputMultiplexer;
 
-    private TextButton startButton;
-    private TextButton exitButton;
+    private final TextButton startButton;
+    private final TextButton exitButton;
 
     public MenuScreen(){
         backgroundStage = new Stage(new ScreenViewport(), game.batch);

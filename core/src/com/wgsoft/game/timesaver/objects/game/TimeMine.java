@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class TimeMine extends Actor {
-    private boolean right;
+    private final boolean right;
     private float time;
     private float difference;
 

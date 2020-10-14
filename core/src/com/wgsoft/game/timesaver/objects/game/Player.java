@@ -24,12 +24,12 @@ public class Player extends Actor {
     }
 
     private Portal portal;
-    private Array<Animation<TextureRegion>> stayAnimations;
-    private Array<Animation<TextureRegion>> runAnimations;
-    private Array<Animation<TextureRegion>> upAnimations;
-    private Array<Animation<TextureRegion>> downAnimations;
-    private Array<Animation<TextureRegion>> dieAnimations;
-    private Array<Animation<TextureRegion>> finishAnimations;
+    private final Array<Animation<TextureRegion>> stayAnimations;
+    private final Array<Animation<TextureRegion>> runAnimations;
+    private final Array<Animation<TextureRegion>> upAnimations;
+    private final Array<Animation<TextureRegion>> downAnimations;
+    private final Array<Animation<TextureRegion>> dieAnimations;
+    private final Array<Animation<TextureRegion>> finishAnimations;
     private float animationTime;
     private Array<Animation<TextureRegion>> currentAnimations;
     private boolean left, right, shift;
@@ -39,8 +39,8 @@ public class Player extends Actor {
     private float time;
     private float attackTime;
     private PlayerItem playerItem = PlayerItem.KATANA;
-    private Array<PlayerState> playerStates;
-    private float prevMaxTime;
+    private final Array<PlayerState> playerStates;
+    private final float prevMaxTime;
     private boolean finishing;
     private boolean moving;
 
@@ -230,13 +230,13 @@ public class Player extends Actor {
     }
 
     private void timeMine(){
-        if(attackTime <= 0f && time > GAME_TIME_MINE_TIME_CONSUMPTION*prevMaxTime){
+        if(attackTime <= 0f && time > GAME_TIME_MINE_TIME_CONSUMPTION){
             if(getScaleX() < 0f){
                 getStage().addActor(new TimeMine(getX()-GAME_THROWABLE_SIZE, getY(Align.center)-GAME_THROWABLE_SIZE/2f, false));
             }else{
                 getStage().addActor(new TimeMine(getRight(), getY(Align.center)-GAME_THROWABLE_SIZE/2f, true));
             }
-            time -= GAME_TIME_MINE_TIME_CONSUMPTION*prevMaxTime;
+            time -= GAME_TIME_MINE_TIME_CONSUMPTION;
         }
     }
 

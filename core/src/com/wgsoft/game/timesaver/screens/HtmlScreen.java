@@ -16,12 +16,12 @@ import com.wgsoft.game.timesaver.Localizable;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class HtmlScreen implements Screen, Localizable {
-    private Stage backgroundStage;
-    private Stage uiStage;
+    private final Stage backgroundStage;
+    private final Stage uiStage;
 
-    private InputMultiplexer inputMultiplexer;
+    private final InputMultiplexer inputMultiplexer;
 
-    private TextButton playButton;
+    private final TextButton playButton;
 
     public HtmlScreen(){
         backgroundStage = new Stage(new ScreenViewport(), game.batch);

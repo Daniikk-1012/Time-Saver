@@ -37,27 +37,27 @@ import com.wgsoft.game.timesaver.objects.game.Track;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class GameScreen implements Screen, Localizable {
-    private Stage backgroundStage;
-    private Stage buildingsStage;
-    private Stage gameStage;
-    private Stage uiStage;
-    private Stage foregroundStage;
-    private Stage timeOverStage;
+    private final Stage backgroundStage;
+    private final Stage buildingsStage;
+    private final Stage gameStage;
+    private final Stage uiStage;
+    private final Stage foregroundStage;
+    private final Stage timeOverStage;
 
-    private InputMultiplexer inputMultiplexer;
+    private final InputMultiplexer inputMultiplexer;
 
     private Player player;
     private float maxTime;
 
-    private TextButton menuButton;
-    private ProgressBar timeProgressBar;
-    private TextButton settingsButton;
-    private Label timeLabel;
-    private CheckBox katanaCheckBox;
-    private CheckBox timeMineCheckBox;
+    private final TextButton menuButton;
+    private final ProgressBar timeProgressBar;
+    private final TextButton settingsButton;
+    private final Label timeLabel;
+    private final CheckBox katanaCheckBox;
+    private final CheckBox timeMineCheckBox;
     //private CheckBox hourglassCheckBox;
 
-    private Label timeOverLabel;
+    private final Label timeOverLabel;
 
     public GameScreen(){
         backgroundStage = new Stage(new ScreenViewport(), game.batch);
@@ -291,6 +291,7 @@ public class GameScreen implements Screen, Localizable {
 
     public void createGame(){
         maxTime = GAME_PLAYER_MAX_TIME_DEFAULT;
+        player = null;
         game.timeFillSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
         createLevel();
     }
@@ -334,7 +335,7 @@ public class GameScreen implements Screen, Localizable {
     public void localize() {
         menuButton.setText(game.bundle.get("game.menu"));
         settingsButton.setText(game.bundle.get("game.settings"));
-        timeLabel.setText(game.bundle.get("game.time"));
+        //timeLabel is updated each frame
     }
 
     @Override
@@ -369,6 +370,13 @@ public class GameScreen implements Screen, Localizable {
         buildingsStage.getCamera().position.x = GAME_BUILDINGS_PARALLAX*gameStage.getCamera().position.x;
         buildingsStage.act(delta); //After gameStage.act because we firstly move the player, then center the camera
         timeProgressBar.setValue(player.getTime()/maxTime);
+        String timeString = String.valueOf(player.getTime());
+        int index = timeString.indexOf(".");
+        if(GAME_TIME_LABEL_AFTER_DOT_COUNT == 0){
+            timeLabel.setText(game.bundle.format("game.time", timeString.substring(0, index), player.getMaxTime()));
+        }else {
+            timeLabel.setText(game.bundle.format("game.time", timeString.substring(0, index+1+GAME_TIME_LABEL_AFTER_DOT_COUNT), player.getMaxTime()));
+        }
         uiStage.act(delta);
         foregroundStage.act(delta);
         timeOverStage.act(delta);

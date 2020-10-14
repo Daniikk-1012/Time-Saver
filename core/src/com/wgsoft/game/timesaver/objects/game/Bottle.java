@@ -8,11 +8,11 @@ import com.badlogic.gdx.utils.Align;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class Bottle extends Actor {
-    private Player player;
-    private Bubble bubble;
-    private boolean right;
+    private final Player player;
+    private final Bubble bubble;
+    private final boolean right;
     private float velocity;
-    private float rotationSpeed;
+    private final float rotationSpeed;
 
     public Bottle(Player player, Bubble bubble, float x, float y, boolean right){
         this.player = player;

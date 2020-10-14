@@ -10,12 +10,12 @@ import com.badlogic.gdx.utils.Align;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class Scientist extends Actor implements Hitable {
-    private Player player;
-    private Bubble bubble;
-    private Animation<TextureRegion> stayAnimation;
-    private Animation<TextureRegion> runAnimation;
-    private Animation<TextureRegion> attackAnimation;
-    private Animation<TextureRegion> dieAnimation;
+    private final Player player;
+    private final Bubble bubble;
+    private final Animation<TextureRegion> stayAnimation;
+    private final Animation<TextureRegion> runAnimation;
+    private final Animation<TextureRegion> attackAnimation;
+    private final Animation<TextureRegion> dieAnimation;
     private float animationTime;
     private Animation<TextureRegion> currentAnimation;
     private float velocity;
@@ -63,7 +63,7 @@ public class Scientist extends Actor implements Hitable {
         setAnimation(dieAnimation);
         addAction(Actions.delay(currentAnimation.getAnimationDuration(), Actions.removeActor()));
         game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
-        player.addMaxTime(GAME_MONSTER_DEATH_MAX_TIME_BONUS);
+        player.addMaxTime(GAME_SCIENTIST_DEATH_MAX_TIME_BONUS);
     }
 
     public float getVelocity(){

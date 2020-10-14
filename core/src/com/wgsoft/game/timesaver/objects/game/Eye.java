@@ -11,13 +11,13 @@ import com.badlogic.gdx.utils.Align;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class Eye extends Actor implements Hitable {
-    private Player player;
-    private Bubble bubble;
-    private Animation<TextureRegion> flyAnimation;
-    private Animation<TextureRegion> dieAnimation;
+    private final Player player;
+    private final Bubble bubble;
+    private final Animation<TextureRegion> flyAnimation;
+    private final Animation<TextureRegion> dieAnimation;
     private float animationTime;
     private Animation<TextureRegion> currentAnimation;
-    private Vector2 velocity;
+    private final Vector2 velocity;
     private boolean wasInBubble;
     private boolean aggressive;
 
@@ -41,9 +41,6 @@ public class Eye extends Actor implements Hitable {
 
     @Override
     public void hit(Player player) {
-        if(currentAnimation != dieAnimation && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
-            die();
-        }
     }
 
     @Override
@@ -58,7 +55,7 @@ public class Eye extends Actor implements Hitable {
         setAnimation(dieAnimation);
         addAction(Actions.delay(currentAnimation.getAnimationDuration(), Actions.removeActor()));
         game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
-        player.addMaxTime(GAME_MONSTER_DEATH_MAX_TIME_BONUS);
+        player.addMaxTime(GAME_EYE_DEATH_MAX_TIME_BONUS);
     }
 
     public float getVelocityX(){
@@ -114,7 +111,7 @@ public class Eye extends Actor implements Hitable {
                     }
                     velocity.setLength(GAME_EYE_ACCELERATION*delta);
                     velocity.add(x, y);
-                    setRotation(velocity.angle());
+                    setRotation(velocity.angleDeg());
                     moveBy(delta * velocity.x, delta * velocity.y);
                 } else {
                     float x = velocity.x, y = velocity.y;
@@ -124,7 +121,7 @@ public class Eye extends Actor implements Hitable {
                     }
                     velocity.setLength(GAME_OUTSIDE_BUBBLE_SPEED_SCALE*GAME_EYE_ACCELERATION*delta);
                     velocity.add(x, y);
-                    setRotation(velocity.angle());
+                    setRotation(velocity.angleDeg());
                     moveBy(delta * velocity.x * GAME_OUTSIDE_BUBBLE_SPEED_SCALE, delta * velocity.y * GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
                 }
             }
@@ -140,7 +137,7 @@ public class Eye extends Actor implements Hitable {
                     ((Solid) getStage().getActors().get(i)).overlap(this);
                 }
             }
-            if(player.isNotDying() && player.isNotAttacking() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
+            if(player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
                 player.die();
                 return;
             }

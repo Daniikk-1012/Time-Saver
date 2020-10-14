@@ -8,10 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class Portal extends Actor {
-    private Player player;
-    private Hatch hatch;
-    private Bubble bubble;
-    private Animation<TextureRegion> shrinkAnimation;
+    private final Player player;
+    private final Hatch hatch;
+    private final Bubble bubble;
+    private final Animation<TextureRegion> shrinkAnimation;
     private float animationTime;
     private Animation<TextureRegion> currentAnimation;
     private boolean shrinking;

@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Align;
 import static com.wgsoft.game.timesaver.Const.*;
 
 public class Bubble extends Actor {
-    private Player player;
+    private final Player player;
 
     public Bubble(Player player){
         this.player = player;

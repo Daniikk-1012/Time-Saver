@@ -52,7 +52,7 @@ task generateResources {
 allprojects {
     apply plugin: "eclipse"
 
-    version = '1.0-beta.4'
+    version = '1.0-beta.5'
     ext {
         appName = "Time Saver"
         gdxVersion = '1.9.12-SNAPSHOT'
@@ -81,7 +81,7 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        api ("com.badlogicgames.gdx:gdx-tools:$gdxVersion") {
+        api("com.badlogicgames.gdx:gdx-tools:$gdxVersion") {
             exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'
         }
     }
@@ -114,6 +114,10 @@ project(":html") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
     }
+
+    compileJava {
+        dependsOn generateResources
+    }
 }
 
 project(":core") {
@@ -121,5 +125,9 @@ project(":core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+
+    classes {
+        dependsOn generateResources
     }
 }

@@ -6,13 +6,14 @@ public class Const {
     public static final int GAME_BUILDING_COUNT = 4;
     public static final int GAME_PLAYER_FULLNESS_LEVEL_MAX = 5;
     public static final int GAME_PLAYER_STATE_COUNT = 4;
+    public static final int GAME_TIME_LABEL_AFTER_DOT_COUNT = 1;
 
     public static final float SCREEN_WIDTH = 1920;
     public static final float SCREEN_HEIGHT = 1080;
     public static final float MENU_BUTTON_PADDING = 50f;
     public static final float GAME_BUTTON_PADDING_HORIZONTAL = 60f;
     public static final float GAME_BUTTON_PADDING_TOP = 50f;
-    public static final float GAME_PLAYER_MAX_TIME_DEFAULT = 5f;
+    public static final float GAME_PLAYER_MAX_TIME_DEFAULT = 10f;
     public static final float GAME_TIME_PROGRESS_BAR_STEP = 0.005f;
     public static final float GAME_BUBBLE_SIZE_MIN = 450f;
     public static final float GAME_BUBBLE_SIZE_MAX = 1400f;
@@ -37,7 +38,7 @@ public class Const {
     public static final float GAME_TIME_MINE_SPEED = 2000f;
     public static final float GAME_TIME_MINE_SHIFT_INTERVAL = 0.2f;
     public static final float GAME_TIME_MINE_SHIFT_AMPLITUDE = 50f;
-    public static final float GAME_TIME_MINE_TIME_CONSUMPTION = 0.5f;
+    public static final float GAME_TIME_MINE_TIME_CONSUMPTION = 5f;
     public static final float GAME_TIME_FILL_SOUND_DELAY = 2f;
     public static final float GAME_SCIENTIST_WIDTH_SCALE = 0.5f;
     public static final float GAME_SCIENTIST_HEIGHT_SCALE = 1f;
@@ -45,7 +46,7 @@ public class Const {
     public static final float GAME_SCIENTIST_DIE_FRAME_DURATION = 0.1f;
     public static final float GAME_SCIENTIST_RUN_FRAME_DURATION = 0.4f;
     public static final float GAME_SCIENTIST_ATTACK_FRAME_DURATION = 0.2f;
-    public static final float GAME_MONSTER_DEATH_MAX_TIME_BONUS = 0.5f;
+    public static final float GAME_SCIENTIST_DEATH_MAX_TIME_BONUS = 0.5f;
     public static final float GAME_MONSTER_VISIBLE_RADIUS = 960f;
     public static final float GAME_SCIENTIST_SPEED = 100f;
     public static final float GAME_BOTTLE_ROTATION_SPEED_AMPLITUDE = 180f;
@@ -59,6 +60,7 @@ public class Const {
     public static final float GAME_DRUG_DEALER_ATTACK_FRAME_DURATION = 0.3f;
     public static final float GAME_DRUG_DEALER_DIE_FRAME_DURATION = 0.1f;
     public static final float GAME_DRUG_DEALER_ATTACK_INTERVAL = 1f;
+    public static final float GAME_DRUG_DEALER_DEATH_MAX_TIME_BONUS = 1f;
     public static final float GAME_DRUG_ROTATION_SPEED_AMPLITUDE = 180f;
     public static final float GAME_DRUG_SPEED = 700f;
     public static final float GAME_DRUG_IMPULSE = 700f;
@@ -67,6 +69,7 @@ public class Const {
     public static final float GAME_EYE_FLY_FRAME_DURATION = 0.2f;
     public static final float GAME_EYE_DIE_FRAME_DURATION = 0.1f;
     public static final float GAME_EYE_ACCELERATION = 500f;
+    public static final float GAME_EYE_DEATH_MAX_TIME_BONUS = 1.5f;
     public static final float GAME_SHOP_WIDTH_SCALE = 0.8f;
     public static final float GAME_SHOP_HEIGHT_SCALE = 1f;
     public static final float GAME_TRUCK_WIDTH_SCALE = 0.65f;
