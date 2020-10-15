@@ -1,7 +1,9 @@
 package com.wgsoft.game.timesaver.objects.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
@@ -19,6 +21,7 @@ public class Scientist extends Actor implements Hitable {
     private Animation<TextureRegion> currentAnimation;
     private float velocity;
     private float attackTime;
+    private final ParticleEffectPool.PooledEffect bloodParticleEffect;
 
     //x is for left side
     public Scientist(Player player, Bubble bubble, float x, float y, boolean right){
@@ -36,6 +39,8 @@ public class Scientist extends Actor implements Hitable {
         attackAnimation = new Animation<>(GAME_SCIENTIST_ATTACK_FRAME_DURATION, game.skin.getRegions("game/scientist/attack"));
         dieAnimation = new Animation<>(GAME_SCIENTIST_DIE_FRAME_DURATION, game.skin.getRegions("game/scientist/die"));
         setAnimation(stayAnimation);
+        bloodParticleEffect = game.bloodParticleEffectPool.obtain();
+        bloodParticleEffect.start();
     }
 
     private float sqr(float x){
@@ -160,6 +165,13 @@ public class Scientist extends Actor implements Hitable {
             return;
         }
         super.act(delta);
+        bloodParticleEffect.setPosition(getX(Align.center), getY(Align.center));
+    }
+
+    @Override
+    public boolean remove() {
+        game.bloodParticleEffectPool.free(bloodParticleEffect);
+        return super.remove();
     }
 
     @Override
@@ -169,5 +181,6 @@ public class Scientist extends Actor implements Hitable {
         }else{
             batch.draw(currentAnimation.getKeyFrame(animationTime), getX()-getWidth(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), -getScaleX(), getScaleY(), getRotation());
         }
+        bloodParticleEffect.draw(batch, Gdx.graphics.getDeltaTime());
     }
 }

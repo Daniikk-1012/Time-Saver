@@ -1,7 +1,9 @@
 package com.wgsoft.game.timesaver.objects.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -17,6 +19,7 @@ public class Eye extends Actor implements Hitable {
     private Animation<TextureRegion> currentAnimation;
     private final Vector2 velocity;
     private boolean aggressive;
+    private final ParticleEffectPool.PooledEffect bloodParticleEffect;
 
     //x and y are for left bottom corner
     public Eye(Player player, Bubble bubble, float x, float y){
@@ -29,6 +32,8 @@ public class Eye extends Actor implements Hitable {
         dieAnimation = new Animation<>(GAME_EYE_DIE_FRAME_DURATION, game.skin.getRegions("game/eye/die"));
         setAnimation(flyAnimation);
         velocity = new Vector2();
+        bloodParticleEffect = game.bloodParticleEffectPool.obtain();
+        bloodParticleEffect.start();
     }
 
     private void setAnimation(Animation<TextureRegion> animation){
@@ -80,6 +85,12 @@ public class Eye extends Actor implements Hitable {
 
     private float sqr(float x){
         return x*x;
+    }
+
+    @Override
+    public boolean remove() {
+        game.bloodParticleEffectPool.free(bloodParticleEffect);
+        return super.remove();
     }
 
     @Override
@@ -138,10 +149,12 @@ public class Eye extends Actor implements Hitable {
             return;
         }
         super.act(delta);
+        bloodParticleEffect.setPosition(getX(Align.center), getY(Align.center));
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(currentAnimation.getKeyFrame(animationTime), getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+        bloodParticleEffect.draw(batch, Gdx.graphics.getDeltaTime());
     }
 }

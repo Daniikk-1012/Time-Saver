@@ -10,6 +10,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -47,6 +49,8 @@ public class MyGdxGame extends Game implements Localizable{
 	public ObjectMap<String, String> properties;
 	public I18NBundle bundle;
 
+	public ParticleEffectPool bloodParticleEffectPool;
+
 	public Preferences prefs;
 
 	public HtmlScreen htmlScreen;
@@ -80,6 +84,10 @@ public class MyGdxGame extends Game implements Localizable{
 			PropertiesUtils.load(properties, Gdx.files.internal("bundle/properties.properties").reader());
 		}catch (Exception ignored){
 		}
+
+		ParticleEffect bloodParticleEffect = new ParticleEffect();
+		bloodParticleEffect.load(Gdx.files.internal("particle/blood.p"), game.skin.getAtlas());
+		bloodParticleEffectPool = new ParticleEffectPool(bloodParticleEffect, 1, Integer.MAX_VALUE);
 
 		prefs = Gdx.app.getPreferences(properties.get("package-name"));
 
