@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 
 import static com.wgsoft.game.timesaver.Const.*;
@@ -13,12 +12,10 @@ import static com.wgsoft.game.timesaver.Const.*;
 public class Eye extends Actor implements Hitable {
     private final Player player;
     private final Bubble bubble;
-    private final Animation<TextureRegion> flyAnimation;
     private final Animation<TextureRegion> dieAnimation;
     private float animationTime;
     private Animation<TextureRegion> currentAnimation;
     private final Vector2 velocity;
-    private boolean wasInBubble;
     private boolean aggressive;
 
     //x and y are for left bottom corner
@@ -28,7 +25,7 @@ public class Eye extends Actor implements Hitable {
         setBounds(x, y, GAME_UNIT_SIZE*GAME_EYE_WIDTH_SCALE, GAME_UNIT_SIZE*GAME_EYE_HEIGHT_SCALE);
         setOrigin(Align.center);
         setScale(1f/GAME_EYE_WIDTH_SCALE, 1f/GAME_EYE_HEIGHT_SCALE);
-        flyAnimation = new Animation<>(GAME_EYE_FLY_FRAME_DURATION, game.skin.getRegions("game/eye/fly"), Animation.PlayMode.LOOP);
+        Animation<TextureRegion> flyAnimation = new Animation<>(GAME_EYE_FLY_FRAME_DURATION, game.skin.getRegions("game/eye/fly"), Animation.PlayMode.LOOP);
         dieAnimation = new Animation<>(GAME_EYE_DIE_FRAME_DURATION, game.skin.getRegions("game/eye/die"));
         setAnimation(flyAnimation);
         velocity = new Vector2();
@@ -53,7 +50,6 @@ public class Eye extends Actor implements Hitable {
 
     private void die(){
         setAnimation(dieAnimation);
-        addAction(Actions.delay(currentAnimation.getAnimationDuration(), Actions.removeActor()));
         game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
         player.addMaxTime(GAME_EYE_DEATH_MAX_TIME_BONUS);
     }
@@ -88,22 +84,18 @@ public class Eye extends Actor implements Hitable {
 
     @Override
     public void act(float delta) {
-        animationTime += delta;
-        if(wasInBubble && sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) >= sqr(bubble.getWidth()/2f)){
-            wasInBubble = false;
-            flyAnimation.setFrameDuration(GAME_EYE_FLY_FRAME_DURATION/GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
-            dieAnimation.setFrameDuration(GAME_EYE_DIE_FRAME_DURATION/GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
-        }else if(!wasInBubble && sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) < sqr(bubble.getWidth()/2f)){
-            wasInBubble = true;
-            flyAnimation.setFrameDuration(GAME_EYE_FLY_FRAME_DURATION);
-            dieAnimation.setFrameDuration(GAME_EYE_DIE_FRAME_DURATION);
+        boolean inBubble = sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) < sqr(bubble.getWidth()/2f);
+        if(inBubble){
+            animationTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
+        }else{
+            animationTime += delta;
         }
         if(currentAnimation != dieAnimation) {
             if(Math.abs(getX(Align.center)-player.getRight()) < GAME_MONSTER_VISIBLE_RADIUS){
                 aggressive = true;
             }
             if(aggressive) {
-                if (wasInBubble) {
+                if (inBubble) {
                     float x = velocity.x, y = velocity.y;
                     velocity.set(player.getX(Align.center)-getX(Align.center), player.getY(Align.center)-getY(Align.center));
                     if(velocity.isZero()){
@@ -141,6 +133,9 @@ public class Eye extends Actor implements Hitable {
                 player.die();
                 return;
             }
+        }else if(currentAnimation.isAnimationFinished(animationTime)){
+            remove();
+            return;
         }
         super.act(delta);
     }

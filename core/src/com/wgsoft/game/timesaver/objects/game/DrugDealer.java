@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 
 import static com.wgsoft.game.timesaver.Const.*;
@@ -18,7 +17,6 @@ public class DrugDealer extends Actor implements Hitable {
     private float animationTime;
     private Animation<TextureRegion> currentAnimation;
     private float velocity;
-    private boolean wasInBubble;
     private float attackTime;
     private boolean aggressive;
 
@@ -28,9 +26,9 @@ public class DrugDealer extends Actor implements Hitable {
         setBounds(x, 0f, GAME_DRUG_DEALER_WIDTH_SCALE*GAME_UNIT_SIZE, GAME_DRUG_DEALER_HEIGHT_SCALE*GAME_UNIT_SIZE);
         setOrigin(Align.center|Align.bottom);
         setScale(1f/GAME_DRUG_DEALER_WIDTH_SCALE, 1f/GAME_DRUG_DEALER_HEIGHT_SCALE);
-        stayAnimation = new Animation<>(GAME_DRUG_DEALER_STAY_FRAME_DURATION/GAME_OUTSIDE_BUBBLE_SPEED_SCALE, game.skin.getRegions("game/drug-dealer/stay"), Animation.PlayMode.LOOP);
-        attackAnimation = new Animation<>(GAME_DRUG_DEALER_ATTACK_FRAME_DURATION/GAME_OUTSIDE_BUBBLE_SPEED_SCALE, game.skin.getRegions("game/drug-dealer/attack"));
-        dieAnimation = new Animation<>(GAME_DRUG_DEALER_DIE_FRAME_DURATION/GAME_OUTSIDE_BUBBLE_SPEED_SCALE, game.skin.getRegions("game/drug-dealer/die"));
+        stayAnimation = new Animation<>(GAME_DRUG_DEALER_STAY_FRAME_DURATION, game.skin.getRegions("game/drug-dealer/stay"), Animation.PlayMode.LOOP);
+        attackAnimation = new Animation<>(GAME_DRUG_DEALER_ATTACK_FRAME_DURATION, game.skin.getRegions("game/drug-dealer/attack"));
+        dieAnimation = new Animation<>(GAME_DRUG_DEALER_DIE_FRAME_DURATION, game.skin.getRegions("game/drug-dealer/die"));
         setAnimation(stayAnimation);
     }
 
@@ -55,7 +53,6 @@ public class DrugDealer extends Actor implements Hitable {
 
     private void die(){
         setAnimation(dieAnimation);
-        addAction(Actions.delay(currentAnimation.getAnimationDuration(), Actions.removeActor()));
         game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
         player.addMaxTime(GAME_DRUG_DEALER_DEATH_MAX_TIME_BONUS);
     }
@@ -79,17 +76,11 @@ public class DrugDealer extends Actor implements Hitable {
 
     @Override
     public void act(float delta) {
-        animationTime += delta;
-        if(wasInBubble && sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) >= sqr(bubble.getWidth()/2f)){
-            wasInBubble = false;
-            stayAnimation.setFrameDuration(GAME_DRUG_DEALER_STAY_FRAME_DURATION/GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
-            attackAnimation.setFrameDuration(GAME_DRUG_DEALER_ATTACK_FRAME_DURATION/GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
-            dieAnimation.setFrameDuration(GAME_DRUG_DEALER_DIE_FRAME_DURATION/GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
-        }else if(!wasInBubble && sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) < sqr(bubble.getWidth()/2f)){
-            wasInBubble = true;
-            stayAnimation.setFrameDuration(GAME_DRUG_DEALER_STAY_FRAME_DURATION);
-            attackAnimation.setFrameDuration(GAME_DRUG_DEALER_ATTACK_FRAME_DURATION);
-            dieAnimation.setFrameDuration(GAME_DRUG_DEALER_DIE_FRAME_DURATION);
+        boolean inBubble = sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) < sqr(bubble.getWidth()/2f);
+        if(inBubble){
+            animationTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
+        }else{
+            animationTime += delta;
         }
         if(player.getX() > getRight()){
             aggressive = true;
@@ -97,7 +88,7 @@ public class DrugDealer extends Actor implements Hitable {
         if(currentAnimation != dieAnimation) {
             if(player.getX(Align.center) < getX(Align.center) && getX(Align.center)-player.getRight() < GAME_MONSTER_VISIBLE_RADIUS){
                 if(aggressive) {
-                    if (wasInBubble) {
+                    if (inBubble) {
                         attackTime += delta;
                     } else {
                         attackTime += delta * GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
@@ -115,13 +106,13 @@ public class DrugDealer extends Actor implements Hitable {
                 setScaleX(-1f/GAME_DRUG_DEALER_WIDTH_SCALE);
             }else if(player.getX(Align.center) > getX(Align.center) && player.getX()-getX(Align.center) < GAME_MONSTER_VISIBLE_RADIUS){
                 if(aggressive) {
-                    if (wasInBubble) {
+                    if (inBubble) {
                         attackTime += delta;
                     } else {
                         attackTime += delta * GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
                     }
                 }
-                if(wasInBubble) {
+                if(inBubble) {
                     attackTime += delta;
                 }else{
                     attackTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
@@ -147,7 +138,7 @@ public class DrugDealer extends Actor implements Hitable {
             } else if (getRight() > GAME_BORDER_RIGHT) {
                 setX(GAME_BORDER_RIGHT, Align.right);
             }
-            if(wasInBubble) {
+            if(inBubble) {
                 velocity -= delta * GAME_GRAVITY;
                 moveBy(0f, delta * velocity);
             }else{
@@ -159,6 +150,9 @@ public class DrugDealer extends Actor implements Hitable {
                     ((Solid) getStage().getActors().get(i)).overlap(this);
                 }
             }
+        }else if(currentAnimation.isAnimationFinished(animationTime)){
+            remove();
+            return;
         }
         super.act(delta);
     }
