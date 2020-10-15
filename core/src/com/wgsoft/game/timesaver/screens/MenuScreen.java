@@ -3,9 +3,13 @@ package com.wgsoft.game.timesaver.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -32,9 +36,38 @@ public class MenuScreen implements Screen, Localizable {
 
         inputMultiplexer = new InputMultiplexer(uiStage, backgroundStage);
 
+        Actor backgroundActor = new Actor(){
+            @Override
+            public void act(float delta) {
+                setSize(getStage().getWidth(), getStage().getHeight());
+                super.act(delta);
+            }
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                batch.draw(game.skin.getRegion("menu/background"), getX(), getY(), getWidth(), getHeight());
+            }
+        };
+        backgroundStage.addActor(backgroundActor);
+
+        Actor shadowActor = new Actor(){
+            @Override
+            public void act(float delta) {
+                setSize(getStage().getWidth(), getStage().getHeight());
+                super.act(delta);
+            }
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                batch.setColor(getColor());
+                batch.draw(game.skin.getRegion("menu/shadow"), getX(), getY(), getWidth(), getHeight());
+                batch.setColor(1f, 1f, 1f, 1f);
+            }
+        };
+        shadowActor.setColor(Color.GREEN);
+        shadowActor.addAction(Actions.forever(Actions.sequence(Actions.color(Color.PURPLE, MENU_COLOR_CHANGE_DURATION, Interpolation.fade), Actions.color(Color.GREEN, MENU_COLOR_CHANGE_DURATION, Interpolation.fade))));
+        backgroundStage.addActor(shadowActor);
+
         Table rootTable = new Table(game.skin);
         rootTable.setFillParent(true);
-        rootTable.setBackground("menu/background");
 
         Image titleImage = new Image(game.skin, "menu/title");
         rootTable.add(titleImage);

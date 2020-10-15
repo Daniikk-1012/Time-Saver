@@ -11,6 +11,7 @@ public class Const {
     public static final float SCREEN_WIDTH = 1920;
     public static final float SCREEN_HEIGHT = 1080;
     public static final float MENU_BUTTON_PADDING = 50f;
+    public static final float MENU_COLOR_CHANGE_DURATION = 5f;
     public static final float GAME_BUTTON_PADDING_HORIZONTAL = 60f;
     public static final float GAME_BUTTON_PADDING_TOP = 50f;
     public static final float GAME_PLAYER_MAX_TIME_DEFAULT = 10f;
