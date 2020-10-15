@@ -74,6 +74,7 @@ public class MenuScreen implements Screen, Localizable {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(inputMultiplexer);
+        game.menuMusic.play();
     }
 
     @Override
@@ -108,6 +109,7 @@ public class MenuScreen implements Screen, Localizable {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        game.menuMusic.stop();
     }
 
     @Override

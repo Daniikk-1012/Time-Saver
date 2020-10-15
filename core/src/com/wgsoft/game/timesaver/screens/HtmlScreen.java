@@ -39,14 +39,8 @@ public class HtmlScreen implements Screen, Localizable {
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.slashSound = Gdx.audio.newSound(Gdx.files.internal("snd/slash.wav"));
-                game.monsterDeathSound = Gdx.audio.newSound(Gdx.files.internal("snd/monster-death.wav"));
-                game.timeOverSound = Gdx.audio.newSound(Gdx.files.internal("snd/time-over.wav"));
-                game.timeFillSound = Gdx.audio.newSound(Gdx.files.internal("snd/time-fill.wav"));
-                game.jumpSound = Gdx.audio.newSound(Gdx.files.internal("snd/jump.wav"));
-                game.deathSound = Gdx.audio.newSound(Gdx.files.internal("snd/death.wav"));
-                game.selectSound = Gdx.audio.newSound(Gdx.files.internal("snd/select.wav"));
-                game.respawnSound = Gdx.audio.newSound(Gdx.files.internal("snd/respawn.wav"));
+                game.initSounds();
+                game.applyMusicVolume();
                 game.setScreen(game.menuScreen);
             }
         });

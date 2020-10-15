@@ -341,6 +341,7 @@ public class GameScreen implements Screen, Localizable {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(inputMultiplexer);
+        game.commonMusic.play();
     }
 
     @Override
@@ -427,6 +428,7 @@ public class GameScreen implements Screen, Localizable {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        game.commonMusic.stop();
     }
 
     @Override

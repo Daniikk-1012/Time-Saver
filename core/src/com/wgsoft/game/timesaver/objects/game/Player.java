@@ -283,6 +283,7 @@ public class Player extends Actor {
     public void move(Hatch hatch){
         moving = true;
         time = 0f;
+        game.hatchSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
         hatch.addAction(Actions.moveBy(-hatch.getWidth(), 0f, GAME_HATCH_MOVE_DURATION, Interpolation.fade));
         addAction(Actions.delay(GAME_HATCH_MOVE_DURATION, Actions.sequence(Actions.run(new Runnable() {
             @Override
