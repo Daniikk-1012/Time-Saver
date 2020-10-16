@@ -163,7 +163,6 @@ public class MyGdxGame extends Game implements Localizable{
 		if(Gdx.app.getType() != Application.ApplicationType.WebGL){
 			applyMusicVolume();
 		}
-		applyMusicVolume();
 	}
 
 	private void initBundle(String s1, String s2, String s3) {
