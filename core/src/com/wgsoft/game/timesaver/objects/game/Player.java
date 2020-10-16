@@ -3,6 +3,7 @@ package com.wgsoft.game.timesaver.objects.game;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,6 +31,7 @@ public class Player extends Actor {
     private Portal portal;
     private final Array<Animation<TextureRegion>> stayAnimations;
     private final Array<Animation<TextureRegion>> runAnimations;
+    private final Array<Animation<TextureRegion>> attackAnimations;
     private final Array<Animation<TextureRegion>> upAnimations;
     private final Array<Animation<TextureRegion>> downAnimations;
     private final Array<Animation<TextureRegion>> dieAnimations;
@@ -47,6 +49,7 @@ public class Player extends Actor {
     private final float prevMaxTime;
     private boolean finishing;
     private boolean moving;
+    private final Array<ParticleEffectPool.PooledEffect> attackParticleEffects;
 
     public Player(float time){
         prevMaxTime = maxTime = time;
@@ -58,6 +61,10 @@ public class Player extends Actor {
         runAnimations = new Array<>();
         for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
             runAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/run"), Animation.PlayMode.LOOP));
+        }
+        attackAnimations = new Array<>();
+        for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
+            attackAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/attack"), Animation.PlayMode.LOOP));
         }
         upAnimations = new Array<>();
         for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
@@ -141,6 +148,7 @@ public class Player extends Actor {
             }
         });
         playerStates = new Array<>();
+        attackParticleEffects = new Array<>();
     }
 
     public void finish(Portal portal, Bubble bubble){
@@ -230,6 +238,7 @@ public class Player extends Actor {
             playerStates.clear();
             attackTime = GAME_PLAYER_ATTACK_DURATION;
             game.slashSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+            attackParticleEffects.add(game.attackParticleEffectPool.obtain());
         }
     }
 
@@ -314,6 +323,14 @@ public class Player extends Actor {
     }
 
     @Override
+    public boolean remove() {
+        for(int i = 0; i < attackParticleEffects.size; i++){
+            attackParticleEffects.get(i).free();
+        }
+        return super.remove();
+    }
+
+    @Override
     public void act(float delta) {
         animationTime += delta;
         for (int i = 0; i < playerStates.size; i++) {
@@ -325,6 +342,9 @@ public class Player extends Actor {
         if(!finishing && currentAnimations != dieAnimations) {
             if (attackTime > 0f) {
                 time -= delta * GAME_PLAYER_ATTACK_TIME_CONSUME_SPEED;
+                if (currentAnimations != attackAnimations) {
+                    setAnimations(attackAnimations);
+                }
                 while (playerStates.size < GAME_PLAYER_STATE_COUNT * (GAME_PLAYER_ATTACK_DURATION - attackTime) / GAME_PLAYER_ATTACK_DURATION) {
                     PlayerState playerState = new PlayerState();
                     playerState.x = getX();
@@ -335,9 +355,6 @@ public class Player extends Actor {
                     playerStates.add(playerState);
                 }
                 attackTime -= delta;
-                if (velocity == 0f && currentAnimations != runAnimations) {
-                    setAnimations(runAnimations);
-                }
                 if (getScaleX() < 0f) {
                     moveBy(-delta * GAME_PLAYER_ATTACK_SPEED, 0f);
                 } else {
@@ -349,6 +366,9 @@ public class Player extends Actor {
                     }
                 }
             } else {
+                if(currentAnimations == attackAnimations){
+                    setAnimations(stayAnimations);
+                }
                 if (left && !right || !left && right || velocity != 0f) {
                     time -= delta;
                 }
@@ -392,12 +412,12 @@ public class Player extends Actor {
                 }
             }
             if (velocity > 0f) {
-                if (currentAnimations != upAnimations) {
+                if (currentAnimations != upAnimations && attackTime <= 0f) {
                     setAnimations(upAnimations);
                 }
                 ground = false;
             } else if (velocity < 0f) {
-                if (currentAnimations != downAnimations) {
+                if (currentAnimations != downAnimations && attackTime <= 0f) {
                     setAnimations(downAnimations);
                 }
                 ground = false;
@@ -415,6 +435,20 @@ public class Player extends Actor {
             time = Interpolation.linear.apply(0f, prevMaxTime, 1f-animationTime/currentAnimations.get(Math.round(time/maxTime*GAME_PLAYER_FULLNESS_LEVEL_MAX)).getAnimationDuration());
         }
         super.act(delta);
+        for(int i = 0; i < attackParticleEffects.size; i++) {
+            attackParticleEffects.get(i).setPosition(getX(Align.center), getY(Align.center));
+            if(getScaleX() < 0f) {
+                attackParticleEffects.get(i).getEmitters().first().getAngle().setLow(360f-(attackParticleEffects.get(i).getEmitters().first().getAngle().getHighMax()-attackParticleEffects.get(i).getEmitters().first().getAngle().getHighMin())/2f);
+            }else if(getScaleX() > 0f){
+                attackParticleEffects.get(i).getEmitters().first().getAngle().setLow(180f-(attackParticleEffects.get(i).getEmitters().first().getAngle().getHighMax()-attackParticleEffects.get(i).getEmitters().first().getAngle().getHighMin())/2f);
+            }
+            attackParticleEffects.get(i).update(delta);
+            if(attackParticleEffects.get(i).isComplete()){
+                attackParticleEffects.get(i).free();
+                attackParticleEffects.removeIndex(i);
+                i--;
+            }
+        }
     }
 
     @Override
@@ -425,5 +459,8 @@ public class Player extends Actor {
         }
         batch.setColor(1f, 1f, 1f, 1f);
         batch.draw(currentAnimations.get(Math.round(time/maxTime*GAME_PLAYER_FULLNESS_LEVEL_MAX)).getKeyFrame(animationTime), getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+        for(int i = 0; i < attackParticleEffects.size; i++) {
+            attackParticleEffects.get(i).draw(batch);
+        }
     }
 }

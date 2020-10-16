@@ -52,7 +52,7 @@ task generateResources {
 allprojects {
     apply plugin: "eclipse"
 
-    version = '1.0-beta.6-dev'
+    version = '1.0-beta.6'
     ext {
         appName = "Time Saver"
         gdxVersion = '1.9.12-SNAPSHOT'

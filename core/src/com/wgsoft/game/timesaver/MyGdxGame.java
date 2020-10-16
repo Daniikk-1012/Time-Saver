@@ -50,6 +50,7 @@ public class MyGdxGame extends Game implements Localizable{
 	public I18NBundle bundle;
 
 	public ParticleEffectPool bloodParticleEffectPool;
+	public ParticleEffectPool attackParticleEffectPool;
 
 	public Preferences prefs;
 
@@ -88,6 +89,9 @@ public class MyGdxGame extends Game implements Localizable{
 		ParticleEffect bloodParticleEffect = new ParticleEffect();
 		bloodParticleEffect.load(Gdx.files.internal("particle/blood.p"), game.skin.getAtlas());
 		bloodParticleEffectPool = new ParticleEffectPool(bloodParticleEffect, 1, Integer.MAX_VALUE);
+		ParticleEffect attackParticleEffect = new ParticleEffect();
+		attackParticleEffect.load(Gdx.files.internal("particle/attack.p"), game.skin.getAtlas());
+		attackParticleEffectPool = new ParticleEffectPool(attackParticleEffect, 1, Integer.MAX_VALUE);
 
 		prefs = Gdx.app.getPreferences(properties.get("package-name"));
 

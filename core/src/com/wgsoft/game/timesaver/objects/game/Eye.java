@@ -1,6 +1,5 @@
 package com.wgsoft.game.timesaver.objects.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
@@ -56,6 +55,7 @@ public class Eye extends Actor implements Hitable {
     private void die(){
         setAnimation(dieAnimation);
         game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+        bloodParticleEffect.allowCompletion();
         player.addMaxTime(GAME_EYE_DEATH_MAX_TIME_BONUS);
     }
 
@@ -89,7 +89,7 @@ public class Eye extends Actor implements Hitable {
 
     @Override
     public boolean remove() {
-        game.bloodParticleEffectPool.free(bloodParticleEffect);
+        bloodParticleEffect.free();
         return super.remove();
     }
 
@@ -97,9 +97,9 @@ public class Eye extends Actor implements Hitable {
     public void act(float delta) {
         boolean inBubble = sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) < sqr(bubble.getWidth()/2f);
         if(inBubble){
-            animationTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
-        }else{
             animationTime += delta;
+        }else{
+            animationTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
         }
         if(currentAnimation != dieAnimation) {
             if(Math.abs(getX(Align.center)-player.getRight()) < GAME_MONSTER_VISIBLE_RADIUS){
@@ -150,11 +150,12 @@ public class Eye extends Actor implements Hitable {
         }
         super.act(delta);
         bloodParticleEffect.setPosition(getX(Align.center), getY(Align.center));
+        bloodParticleEffect.update(delta);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(currentAnimation.getKeyFrame(animationTime), getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-        bloodParticleEffect.draw(batch, Gdx.graphics.getDeltaTime());
+        bloodParticleEffect.draw(batch);
     }
 }
