@@ -70,6 +70,7 @@ public class MenuScreen implements Screen, Localizable {
         rootTable.setFillParent(true);
 
         Image titleImage = new Image(game.skin, "menu/title");
+        titleImage.setTouchable(Touchable.disabled);
         rootTable.add(titleImage);
 
         rootTable.row();

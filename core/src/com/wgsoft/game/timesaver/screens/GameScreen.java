@@ -17,9 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.timesaver.Localizable;
 import com.wgsoft.game.timesaver.objects.game.Bubble;
@@ -43,6 +45,7 @@ public class GameScreen implements Screen, Localizable {
     private final Stage uiStage;
     private final Stage foregroundStage;
     private final Stage timeOverStage;
+    private final Stage victoryStage;
 
     private final InputMultiplexer inputMultiplexer;
 
@@ -55,9 +58,15 @@ public class GameScreen implements Screen, Localizable {
     private final Label timeLabel;
     private final CheckBox katanaCheckBox;
     private final CheckBox timeMineCheckBox;
-    //private CheckBox hourglassCheckBox;
+    //private CheckBox hourglassCheckBox; TODO: Add hourglass item
 
     private final Label timeOverLabel;
+
+    private final Label blueVictoryLabel;
+    private final Label redVictoryLabel;
+    private final Label victoryLabel;
+    private final Stack victoryStack;
+    private final TextButton victoryMenuButton;
 
     public GameScreen(){
         backgroundStage = new Stage(new ScreenViewport(), game.batch);
@@ -67,14 +76,14 @@ public class GameScreen implements Screen, Localizable {
         gameStage = new Stage(new ScreenViewport(), game.batch);
         gameStage.getRoot().setTouchable(Touchable.disabled);
         uiStage = new Stage(new ScreenViewport(), game.batch);
-        uiStage.getRoot().setTouchable(Touchable.childrenOnly);
         foregroundStage = new Stage(new ScreenViewport(), game.batch);
         foregroundStage.getRoot().setTouchable(Touchable.disabled);
         timeOverStage = new Stage(new ScreenViewport(), game.batch);
-        timeOverStage.addAction(Actions.alpha(0f));
+        timeOverStage.getRoot().setColor(1f, 1f, 1f, 0f);
         timeOverStage.getRoot().setTouchable(Touchable.disabled);
+        victoryStage = new Stage(new ScreenViewport(), game.batch);
 
-        inputMultiplexer = new InputMultiplexer(timeOverStage, foregroundStage, uiStage, gameStage, buildingsStage, backgroundStage);
+        inputMultiplexer = new InputMultiplexer(victoryStage, timeOverStage, foregroundStage, uiStage, gameStage, buildingsStage, backgroundStage);
 
         Actor backgroundActor = new Actor(){
             @Override
@@ -140,7 +149,7 @@ public class GameScreen implements Screen, Localizable {
         topTable.add(timeProgressBar).expandX().padTop(GAME_BUTTON_PADDING_TOP);
 
         settingsButton = new TextButton("game.settings", game.skin, "boldestMedium");
-        settingsButton.setVisible(false);
+        settingsButton.setVisible(false); //TODO Create settings
         topTable.add(settingsButton).padRight(GAME_BUTTON_PADDING_HORIZONTAL).padTop(GAME_BUTTON_PADDING_TOP).right();
 
         topTable.row();
@@ -287,12 +296,45 @@ public class GameScreen implements Screen, Localizable {
         timeOverTable.add(timeOverLabel);
 
         timeOverStage.addActor(timeOverTable);
+
+        Table victoryTable = new Table(game.skin);
+        victoryTable.setFillParent(true);
+
+        Image victoryBackgroundImage = new Image(game.skin, "game/victory-background");
+        victoryBackgroundImage.setTouchable(Touchable.disabled);
+        blueVictoryLabel = new Label("game.blue-victory", game.skin, "boldestMedium");
+        blueVictoryLabel.setAlignment(Align.center);
+        blueVictoryLabel.setTouchable(Touchable.disabled);
+        redVictoryLabel = new Label("game.red-victory", game.skin, "boldestMedium");
+        redVictoryLabel.setTouchable(Touchable.disabled);
+        redVictoryLabel.setAlignment(Align.center);
+        victoryLabel = new Label("game.victory", game.skin, "boldestMedium");
+        victoryLabel.setTouchable(Touchable.disabled);
+        victoryLabel.setAlignment(Align.center);
+        victoryStack = victoryTable.stack(victoryBackgroundImage, blueVictoryLabel, redVictoryLabel, victoryLabel).getActor();
+
+        victoryTable.row();
+
+        victoryMenuButton = new TextButton("game.victory-menu", game.skin, "boldestMedium");
+        victoryMenuButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(game.menuScreen);
+            }
+        });
+        victoryTable.add(victoryMenuButton);
+
+        victoryStage.addActor(victoryTable);
     }
 
     public void createGame(){
         maxTime = GAME_PLAYER_MAX_TIME_DEFAULT;
         player = null;
         game.timeFillSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+        uiStage.getRoot().setColor(1f, 1f, 1f, 1f);
+        uiStage.getRoot().setTouchable(Touchable.childrenOnly);
+        victoryStage.getRoot().setColor(1f, 1f, 1f, 0f);
+        victoryStage.getRoot().setTouchable(Touchable.disabled);
         createLevel();
     }
 
@@ -307,7 +349,7 @@ public class GameScreen implements Screen, Localizable {
         player = new Player(maxTime);
         Bubble bubble = new Bubble(player);
         Hatch hatch = new Hatch(8950f, ground.getTop());
-        gameStage.addActor(new Portal(player, hatch, bubble, 8950f, ground.getTop()));
+        gameStage.addActor(new Portal(player, hatch, bubble, victoryStage, victoryStack, uiStage, blueVictoryLabel, redVictoryLabel, 8950f, ground.getTop()));
         gameStage.addActor(hatch);
         gameStage.setKeyboardFocus(player);
         gameStage.addActor(player);
@@ -336,6 +378,11 @@ public class GameScreen implements Screen, Localizable {
         menuButton.setText(game.bundle.get("game.menu"));
         settingsButton.setText(game.bundle.get("game.settings"));
         //timeLabel is updated each frame
+
+        blueVictoryLabel.setText(game.bundle.get("game.blue-victory"));
+        redVictoryLabel.setText(game.bundle.get("game.red-victory"));
+        victoryLabel.setText(game.bundle.get("game.victory"));
+        victoryMenuButton.setText(game.bundle.get("game.victory-menu"));
     }
 
     @Override
@@ -381,6 +428,7 @@ public class GameScreen implements Screen, Localizable {
         uiStage.act(delta);
         foregroundStage.act(delta);
         timeOverStage.act(delta);
+        victoryStage.act(delta);
         game.batch.setColor(1f, 1f, 1f, 1f); //Because alpha does not restore color of SpriteBatch
         backgroundStage.draw();
         buildingsStage.draw();
@@ -388,6 +436,7 @@ public class GameScreen implements Screen, Localizable {
         uiStage.draw();
         foregroundStage.draw();
         timeOverStage.draw();
+        victoryStage.draw();
     }
 
     @Override
@@ -399,6 +448,7 @@ public class GameScreen implements Screen, Localizable {
             ((ScreenViewport) uiStage.getViewport()).setUnitsPerPixel(SCREEN_HEIGHT/height);
             ((ScreenViewport) foregroundStage.getViewport()).setUnitsPerPixel(SCREEN_HEIGHT/height);
             ((ScreenViewport) timeOverStage.getViewport()).setUnitsPerPixel(SCREEN_HEIGHT/height);
+            ((ScreenViewport) victoryStage.getViewport()).setUnitsPerPixel(SCREEN_HEIGHT/height);
         }else{
             ((ScreenViewport) backgroundStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
             ((ScreenViewport) buildingsStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
@@ -406,6 +456,7 @@ public class GameScreen implements Screen, Localizable {
             ((ScreenViewport) uiStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
             ((ScreenViewport) foregroundStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
             ((ScreenViewport) timeOverStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
+            ((ScreenViewport) victoryStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
         }
         backgroundStage.getViewport().update(width, height, true);
         buildingsStage.getViewport().update(width, height);
@@ -415,6 +466,7 @@ public class GameScreen implements Screen, Localizable {
         uiStage.getViewport().update(width, height, true);
         foregroundStage.getViewport().update(width, height, true);
         timeOverStage.getViewport().update(width, height, true);
+        victoryStage.getViewport().update(width, height, true);
     }
 
     @Override

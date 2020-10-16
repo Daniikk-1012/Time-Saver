@@ -12,9 +12,12 @@ public class Const {
     public static final float SCREEN_HEIGHT = 1080;
     public static final float MENU_BUTTON_PADDING = 50f;
     public static final float MENU_COLOR_CHANGE_DURATION = 5f;
+    public static final float GAME_VICTORY_UI_FADE_DURATION = 3f;
+    public static final float GAME_VICTORY_ALPHA_DURATION = 2f;
+    public static final float GAME_VICTORY_SHIFT_DURATION = 4f;
     public static final float GAME_BUTTON_PADDING_HORIZONTAL = 60f;
     public static final float GAME_BUTTON_PADDING_TOP = 50f;
-    public static final float GAME_PLAYER_MAX_TIME_DEFAULT = 10f;
+    public static final float GAME_PLAYER_MAX_TIME_DEFAULT = 100f;
     public static final float GAME_TIME_PROGRESS_BAR_STEP = 0.005f;
     public static final float GAME_BUBBLE_SIZE_MIN = 450f;
     public static final float GAME_BUBBLE_SIZE_MAX = 1400f;

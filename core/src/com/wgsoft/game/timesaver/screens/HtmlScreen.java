@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -25,7 +26,9 @@ public class HtmlScreen implements Screen, Localizable {
 
     public HtmlScreen(){
         backgroundStage = new Stage(new ScreenViewport(), game.batch);
+        backgroundStage.getRoot().setTouchable(Touchable.disabled);
         uiStage = new Stage(new ScreenViewport(), game.batch);
+        uiStage.getRoot().setTouchable(Touchable.childrenOnly);
 
         inputMultiplexer = new InputMultiplexer(uiStage, backgroundStage);
 

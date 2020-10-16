@@ -8,8 +8,12 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
@@ -280,7 +284,7 @@ public class Player extends Actor {
         currentAnimations = animations;
     }
 
-    public void move(Hatch hatch){
+    public void move(Hatch hatch, Stage victoryStage, final Stack victoryStack, final Label blueVictoryLabel, final Label redVictoryLabel){
         moving = true;
         time = 0f;
         game.hatchSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
@@ -296,12 +300,13 @@ public class Player extends Actor {
                 toBack();
                 setAnimations(downAnimations);
             }
-        }), Actions.moveBy(0f, -(getY()+getHeight()*getScaleY()), GAME_PLAYER_DOWN_DURATION, Interpolation.pow2In), Actions.run(new Runnable() {
+        }), Actions.moveBy(0f, -(getY()+getHeight()*getScaleY()), GAME_PLAYER_DOWN_DURATION, Interpolation.exp5In), Actions.run(new Runnable() {
             @Override
             public void run() {
-                game.setScreen(game.menuScreen);
+                victoryStack.invalidate();
+                victoryStack.validate();
             }
-        }))));
+        }), Actions.parallel(Actions.addAction(Actions.sequence(Actions.alpha(1f, GAME_VICTORY_ALPHA_DURATION, Interpolation.fade), Actions.touchable(Touchable.childrenOnly)), victoryStage.getRoot()), Actions.addAction(Actions.moveToAligned(0f, blueVictoryLabel.getY(), Align.right|Align.bottom, GAME_VICTORY_SHIFT_DURATION, Interpolation.fade), blueVictoryLabel), Actions.addAction(Actions.moveTo(victoryStage.getWidth(), redVictoryLabel.getY(), GAME_VICTORY_SHIFT_DURATION, Interpolation.fade), redVictoryLabel)))));
     }
 
     public boolean isNotMoving(){
