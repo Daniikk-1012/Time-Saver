@@ -66,7 +66,7 @@ public class Bottle extends Actor {
                 }
             }
         }
-        if(player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
+        if(player.isNotFinishing() && player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
             if(player.isNotAttacking()) {
                 player.die();
             }
