@@ -236,6 +236,13 @@ public class Shop extends Actor implements Solid {
     }
 
     @Override
+    public void overlap(Wreckage wreckage) {
+        if(wreckage.getX() < getRight() && wreckage.getRight() > getX() && wreckage.getY() < getTop() && wreckage.getTop() > getY()){
+            wreckage.remove();
+        }
+    }
+
+    @Override
     public void act(float delta) {
         super.act(delta);
     }

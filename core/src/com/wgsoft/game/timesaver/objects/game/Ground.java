@@ -65,6 +65,13 @@ public class Ground extends Actor implements Solid {
     }
 
     @Override
+    public void overlap(Wreckage wreckage) {
+        if(wreckage.getY() < getTop()){
+            wreckage.remove();
+        }
+    }
+
+    @Override
     public void act(float delta) {
         setWidth(getStage().getWidth());
         setX(getStage().getCamera().position.x, Align.center);

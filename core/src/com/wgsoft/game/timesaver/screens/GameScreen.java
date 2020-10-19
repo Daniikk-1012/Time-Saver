@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -34,7 +35,8 @@ import com.wgsoft.game.timesaver.objects.game.PlayerItem;
 import com.wgsoft.game.timesaver.objects.game.Portal;
 import com.wgsoft.game.timesaver.objects.game.Scientist;
 import com.wgsoft.game.timesaver.objects.game.Shop;
-import com.wgsoft.game.timesaver.objects.game.Track;
+import com.wgsoft.game.timesaver.objects.game.Truck;
+import com.wgsoft.game.timesaver.objects.game.Wreckage;
 
 import static com.wgsoft.game.timesaver.Const.*;
 
@@ -344,10 +346,10 @@ public class GameScreen implements Screen, Localizable {
         }
         gameStage.clear();
         Ground ground = new Ground();
-        gameStage.addActor(new Track(2660f, ground.getTop()));
+        gameStage.addActor(new Truck(2660f, ground.getTop()));
         gameStage.addActor(new Shop(4370f, ground.getTop()));
         player = new Player(maxTime);
-        Bubble bubble = new Bubble(player);
+        final Bubble bubble = new Bubble(player);
         Hatch hatch = new Hatch(8950f, ground.getTop());
         gameStage.addActor(new Portal(player, hatch, bubble, victoryStage, victoryStack, uiStage, blueVictoryLabel, redVictoryLabel, 8950f, ground.getTop()));
         gameStage.addActor(hatch);
@@ -370,6 +372,14 @@ public class GameScreen implements Screen, Localizable {
         gameStage.addActor(new Scientist(player, bubble, 9300f, 0f, false));
         gameStage.addActor(new Eye(player, bubble, 9200f, 800f));
         gameStage.addActor(bubble);
+        gameStage.addAction(Actions.forever(Actions.delay(GAME_WRECKAGE_SPAWN_INTERVAL, Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                if(player.isNotFinishing()) {
+                    gameStage.addActor(new Wreckage(player, bubble, MathUtils.random(-GAME_BORDER_LEFT, GAME_BORDER_RIGHT), gameStage.getHeight()));
+                }
+            }
+        }))));
         katanaCheckBox.setChecked(true);
     }
 

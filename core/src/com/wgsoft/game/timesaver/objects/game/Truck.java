@@ -6,8 +6,8 @@ import com.badlogic.gdx.utils.Align;
 
 import static com.wgsoft.game.timesaver.Const.*;
 
-public class Track extends Actor implements Solid {
-    public Track(float x, float y){
+public class Truck extends Actor implements Solid {
+    public Truck(float x, float y){
         setBounds(x, y, game.skin.getRegion("game/truck").getRegionWidth()*GAME_TRUCK_WIDTH_SCALE, game.skin.getRegion("game/truck").getRegionHeight()*GAME_TRUCK_HEIGHT_SCALE);
         setOrigin(Align.right|Align.bottom);
         setScale(1f/GAME_TRUCK_WIDTH_SCALE, 1f/GAME_TRUCK_HEIGHT_SCALE);
@@ -63,6 +63,13 @@ public class Track extends Actor implements Solid {
         if(eye.getVelocityY() < 0f && eye.getRight() > getX() && eye.getX() < getRight() && eye.getY() > getTop()-GAME_TRUCK_MAX_OFFSET && eye.getY() < getTop()){
             eye.setY(getTop());
             eye.stopDown();
+        }
+    }
+
+    @Override
+    public void overlap(Wreckage wreckage) {
+        if(wreckage.getRight() > getX() && wreckage.getX() < getRight() && wreckage.getY() > getTop()-GAME_TRUCK_MAX_OFFSET && wreckage.getY() < getTop()){
+            wreckage.remove();
         }
     }
 

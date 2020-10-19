@@ -8,4 +8,5 @@ public interface Solid {
     void overlap(DrugDealer drugDealer);
     void overlap(Drug drug);
     void overlap(Eye eye);
+    void overlap(Wreckage wreckage);
 }
