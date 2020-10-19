@@ -78,9 +78,9 @@ public class DrugDealer extends Actor implements Hitable {
     public void act(float delta) {
         boolean inBubble = sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) < sqr(bubble.getWidth()/2f);
         if(inBubble){
-            animationTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
-        }else{
             animationTime += delta;
+        }else{
+            animationTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
         }
         if(player.getX() > getRight()){
             aggressive = true;
