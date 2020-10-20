@@ -20,8 +20,8 @@ public class HoverBoard extends Actor {
     public HoverBoard(Player player, Bubble bubble, float x, float y, boolean right){
         this.player = player;
         this.bubble = bubble;
-        startAnimation = new Animation<>(GAME_HOVER_BOARD_FRAME_DURATION, game.skin.getRegions("game/hover-board/start"));
-        flyAnimation = new Animation<>(GAME_HOVER_BOARD_FRAME_DURATION, game.skin.getRegions("game/hover-board/fly"), Animation.PlayMode.LOOP_PINGPONG);
+        startAnimation = new Animation<>(GAME_HOVER_BOARD_START_FRAME_DURATION, game.skin.getRegions("game/hover-board/start"));
+        flyAnimation = new Animation<>(GAME_HOVER_BOARD_FLY_FRAME_DURATION, game.skin.getRegions("game/hover-board/fly"), Animation.PlayMode.LOOP_PINGPONG);
         setSize(GAME_HOVER_BOARD_SIZE, GAME_HOVER_BOARD_SIZE*GAME_HOVER_BOARD_HEIGHT_SCALE);
         if(right){
             setScaleX(1f);
@@ -87,8 +87,10 @@ public class HoverBoard extends Actor {
                 }
             }
         }
-        if(player.isNotFinishing() && player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
-            player.die();
+        if(currentAnimation != startAnimation && player.isNotFinishing() && player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
+            if(player.isNotAttacking()) {
+                player.die();
+            }
             remove();
             return;
         }
