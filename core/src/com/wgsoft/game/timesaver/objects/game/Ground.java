@@ -72,6 +72,13 @@ public class Ground extends Actor implements Solid {
     }
 
     @Override
+    public void overlap(HoverBoard hoverBoard) {
+        if(hoverBoard.getY() < getTop()){
+            hoverBoard.remove();
+        }
+    }
+
+    @Override
     public void act(float delta) {
         setWidth(getStage().getWidth());
         setX(getStage().getCamera().position.x, Align.center);

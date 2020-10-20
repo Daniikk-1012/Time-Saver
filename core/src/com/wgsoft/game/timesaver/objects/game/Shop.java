@@ -243,6 +243,13 @@ public class Shop extends Actor implements Solid {
     }
 
     @Override
+    public void overlap(HoverBoard hoverBoard) {
+        if(hoverBoard.getX() < getRight() && hoverBoard.getRight() > getX() && hoverBoard.getY() < getTop() && hoverBoard.getTop() > getY()){
+            hoverBoard.remove();
+        }
+    }
+
+    @Override
     public void act(float delta) {
         super.act(delta);
     }

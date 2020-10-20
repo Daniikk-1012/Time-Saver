@@ -74,6 +74,13 @@ public class Truck extends Actor implements Solid {
     }
 
     @Override
+    public void overlap(HoverBoard hoverBoard) {
+        if(hoverBoard.getRight() > getX() && hoverBoard.getX() < getRight() && hoverBoard.getY() > getTop()-GAME_TRUCK_MAX_OFFSET && hoverBoard.getY() < getTop()){
+            hoverBoard.remove();
+        }
+    }
+
+    @Override
     public void act(float delta) {
         super.act(delta);
     }

@@ -92,8 +92,16 @@ public class Const {
     public static final float GAME_WRECKAGE_SIZE = 125f;
     public static final float GAME_WRECKAGE_SPAWN_INTERVAL = 1f;
     public static final float GAME_WRECKAGE_ROTATION_SPEED_AMPLITUDE = 90f;
+    public static final float GAME_HOVER_BOARD_FRAME_DURATION = 0.2f;
+    public static final float GAME_HOVER_BOARD_ACCELERATION = 800f;
+    public static final float GAME_HOVER_BOARD_VELOCITY_MAX = 750f;
     public static final float SETTINGS_SOUND_DEFAULT = 0.5f;
     public static final float SETTINGS_MUSIC_DEFAULT = 0.5f;
+    public static final float GAME_PORTAL_TRASH_SPAWN_INTERVAL_MIN = 10f;
+    public static final float GAME_PORTAL_TRASH_SPAWN_INTERVAL_MAX = 15f;
+    public static final float GAME_PORTAL_TRASH_SPAWN_OFFSET_Y = 75f;
+    public static final float GAME_HOVER_BOARD_SIZE = 125f;
+    public static final float GAME_HOVER_BOARD_HEIGHT_SCALE = 0.5f;
 
     public static final String[] SETTINGS_LANGUAGES = new String[]{
             "en"

@@ -30,6 +30,7 @@ import com.wgsoft.game.timesaver.objects.game.DrugDealer;
 import com.wgsoft.game.timesaver.objects.game.Eye;
 import com.wgsoft.game.timesaver.objects.game.Ground;
 import com.wgsoft.game.timesaver.objects.game.Hatch;
+import com.wgsoft.game.timesaver.objects.game.HoverBoard;
 import com.wgsoft.game.timesaver.objects.game.Player;
 import com.wgsoft.game.timesaver.objects.game.PlayerItem;
 import com.wgsoft.game.timesaver.objects.game.Portal;
@@ -351,7 +352,8 @@ public class GameScreen implements Screen, Localizable {
         player = new Player(maxTime);
         final Bubble bubble = new Bubble(player);
         Hatch hatch = new Hatch(8950f, ground.getTop());
-        gameStage.addActor(new Portal(player, hatch, bubble, victoryStage, victoryStack, uiStage, blueVictoryLabel, redVictoryLabel, 8950f, ground.getTop()));
+        final Portal portal = new Portal(player, hatch, bubble, victoryStage, victoryStack, uiStage, blueVictoryLabel, redVictoryLabel, 8950f, ground.getTop());
+        gameStage.addActor(portal);
         gameStage.addActor(hatch);
         gameStage.setKeyboardFocus(player);
         gameStage.addActor(player);
@@ -380,6 +382,19 @@ public class GameScreen implements Screen, Localizable {
                 }
             }
         }))));
+        portal.addAction(Actions.run(new Runnable() {
+            @Override
+            public void run() {
+                portal.addAction(Actions.sequence(Actions.delay(MathUtils.random(GAME_PORTAL_TRASH_SPAWN_INTERVAL_MIN, GAME_PORTAL_TRASH_SPAWN_INTERVAL_MAX), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(player.isNotFinishing()){
+                            gameStage.addActor(new HoverBoard(player, bubble, portal.getX()-GAME_THROWABLE_SIZE, portal.getY()+GAME_PORTAL_TRASH_SPAWN_OFFSET_Y, false));
+                        }
+                    }
+                })), Actions.run(this)));
+            }
+        }));
         katanaCheckBox.setChecked(true);
     }
 
