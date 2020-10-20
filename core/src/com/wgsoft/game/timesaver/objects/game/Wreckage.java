@@ -47,7 +47,9 @@ public class Wreckage extends Actor {
             }
         }
         if(player.isNotFinishing() && player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
-            player.die();
+            if(player.isNotAttacking()) {
+                player.die();
+            }
             remove();
             return;
         }
