@@ -16,7 +16,7 @@ public class Wreckage extends Actor {
     public Wreckage(Player player, Bubble bubble, float x, float y){
         this.player = player;
         this.bubble = bubble;
-        setSize(GAME_THROWABLE_SIZE, GAME_THROWABLE_SIZE);
+        setSize(GAME_WRECKAGE_SIZE, GAME_WRECKAGE_SIZE);
         setPosition(x, y, Align.center|Align.bottom);
         setOrigin(Align.center);
         rotationSpeed = MathUtils.random(-GAME_WRECKAGE_ROTATION_SPEED_AMPLITUDE, GAME_WRECKAGE_ROTATION_SPEED_AMPLITUDE);

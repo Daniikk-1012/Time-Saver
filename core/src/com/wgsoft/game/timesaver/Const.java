@@ -89,6 +89,7 @@ public class Const {
     public static final float GAME_HATCH_MOVE_DURATION = 3f;
     public static final float GAME_PLAYER_MOVE_DURATION = 1f;
     public static final float GAME_PLAYER_DOWN_DURATION = 1f;
+    public static final float GAME_WRECKAGE_SIZE = 125f;
     public static final float GAME_WRECKAGE_SPAWN_INTERVAL = 1f;
     public static final float GAME_WRECKAGE_ROTATION_SPEED_AMPLITUDE = 90f;
     public static final float SETTINGS_SOUND_DEFAULT = 0.5f;
