@@ -97,7 +97,7 @@ public class HoverBoard extends Actor {
                 }
             }
         }
-        if(currentAnimation != startAnimation && player.isNotFinishing() && player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
+        if(currentAnimation != startAnimation && game.gameScreen.isNotFinishing() && player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
             if(player.isNotAttacking()) {
                 player.die();
             }

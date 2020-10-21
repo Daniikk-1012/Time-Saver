@@ -82,7 +82,8 @@ public class MenuScreen implements Screen, Localizable {
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.gameScreen.createGame();
+                game.gameScreen.createGame(0);
+                game.gameScreen.createLevel();
                 game.setScreen(game.gameScreen);
             }
         });

@@ -5,16 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.wgsoft.game.timesaver.screens.GameScreen;
@@ -51,7 +45,6 @@ public class Player extends Actor {
 
     private final float borderLeft;
     private final float borderRight;
-    private Portal portal;
     private final Array<Animation<TextureRegion>> stayAnimations;
     private final Array<Animation<TextureRegion>> runAnimations;
     private final Array<Animation<TextureRegion>> attackAnimations;
@@ -69,15 +62,12 @@ public class Player extends Actor {
     private float attackTime;
     private PlayerItem playerItem = PlayerItem.KATANA;
     private final Array<PlayerState> playerStates;
-    private final float prevMaxTime;
-    private boolean finishing;
-    private boolean moving;
     private final Array<ParticleEffectPool.PooledEffect> attackParticleEffects;
 
     public Player(float borderLeft, float borderRight, float time){
         this.borderLeft = borderLeft;
         this.borderRight= borderRight;
-        prevMaxTime = maxTime = time;
+        maxTime = time;
         this.time = maxTime;
         stayAnimations = new Array<>();
         for(int i = 0; i <= FULLNESS_LEVEL_MAX; i++){
@@ -115,7 +105,7 @@ public class Player extends Actor {
         addListener(new InputListener(){
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                if(!finishing && currentAnimations != dieAnimations) {
+                if(game.gameScreen.isNotFinishing() && currentAnimations != dieAnimations) {
                     switch (keycode) {
                         case Input.Keys.W:
                         case Input.Keys.UP:
@@ -176,34 +166,6 @@ public class Player extends Actor {
         attackParticleEffects = new Array<>();
     }
 
-    public void finish(Portal portal, Bubble bubble){
-        this.portal = portal;
-        bubble.addAction(Actions.alpha(0f));
-        finishing = true;
-        setAnimations(stayAnimations);
-        if(portal.getX(Align.center) > getX(Align.center)){
-            setScaleX(1f/WIDTH_SCALE);
-        }else{
-            setScaleX(-1f/WIDTH_SCALE);
-        }
-        final float currentTime = time;
-        addAction(Actions.sequence(new TemporalAction(TIME_FILL_DURATION, Interpolation.fade) {
-            @Override
-            protected void update(float percent) {
-                time = Interpolation.linear.apply(currentTime, prevMaxTime, percent);
-            }
-        }, Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                setAnimations(finishAnimations);
-            }
-        })));
-    }
-
-    public boolean isNotFinishing(){
-        return !finishing;
-    }
-
     public boolean isGround(){
         return ground;
     }
@@ -231,6 +193,10 @@ public class Player extends Actor {
 
     public float getTime(){
         return time;
+    }
+
+    public void setTime(float time){
+        this.time = time;
     }
 
     public float getMaxTime(){
@@ -311,38 +277,33 @@ public class Player extends Actor {
         ground = true;
     }
 
-    private void setAnimations(Array<Animation<TextureRegion>> animations){
+    public void setAnimations(Array<Animation<TextureRegion>> animations){
         animationTime = 0f;
         currentAnimations = animations;
     }
 
-    public void move(Hatch hatch, Stage victoryStage, final Stack victoryStack, final Label blueVictoryLabel, final Label redVictoryLabel){
-        moving = true;
-        time = 0f;
-        game.hatchSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
-        hatch.addAction(Actions.moveBy(-hatch.getWidth(), 0f, Hatch.MOVE_DURATION, Interpolation.fade));
-        addAction(Actions.delay(Hatch.MOVE_DURATION, Actions.sequence(Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                setAnimations(runAnimations);
-            }
-        }), Actions.moveToAligned(hatch.getX(Align.center), getY(), Align.center|Align.bottom, MOVE_DURATION, Interpolation.fade), Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                toBack();
-                setAnimations(downAnimations);
-            }
-        }), Actions.moveBy(0f, -(getY()+getHeight()*getScaleY()), DOWN_DURATION, Interpolation.exp5In), Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                victoryStack.invalidate();
-                victoryStack.validate();
-            }
-        }), Actions.parallel(Actions.addAction(Actions.sequence(Actions.alpha(1f, GameScreen.VICTORY_ALPHA_DURATION, Interpolation.fade), Actions.touchable(Touchable.childrenOnly)), victoryStage.getRoot()), Actions.addAction(Actions.moveToAligned(0f, blueVictoryLabel.getY(), Align.right|Align.bottom, GameScreen.VICTORY_SHIFT_DURATION, Interpolation.fade), blueVictoryLabel), Actions.addAction(Actions.moveTo(victoryStage.getWidth(), redVictoryLabel.getY(), GameScreen.VICTORY_SHIFT_DURATION, Interpolation.fade), redVictoryLabel)))));
+    public Array<Animation<TextureRegion>> getStayAnimations(){
+        return stayAnimations;
     }
 
-    public boolean isNotMoving(){
-        return !moving;
+    public Array<Animation<TextureRegion>> getFinishAnimations(){
+        return finishAnimations;
+    }
+
+    public Array<Animation<TextureRegion>> getRunAnimations(){
+        return runAnimations;
+    }
+
+    public Array<Animation<TextureRegion>> getDownAnimations(){
+        return downAnimations;
+    }
+
+    public Array<Animation<TextureRegion>> getCurrentAnimations(){
+        return currentAnimations;
+    }
+
+    public float getAnimationTime(){
+        return animationTime;
     }
 
     @Override
@@ -362,7 +323,7 @@ public class Player extends Actor {
                 playerStates.get(i).alpha = 0f;
             }
         }
-        if(!finishing && currentAnimations != dieAnimations) {
+        if(game.gameScreen.isNotFinishing() && currentAnimations != dieAnimations) {
             if (attackTime > 0f) {
                 time -= delta * ATTACK_TIME_CONSUME_SPEED;
                 if (currentAnimations != attackAnimations) {
@@ -452,10 +413,6 @@ public class Player extends Actor {
             } else {
                 getStage().getCamera().position.x = Math.min(getX(Align.center), borderRight - getStage().getWidth() / 2f);
             }
-        }else if(currentAnimations == finishAnimations &&  currentAnimations.get(Math.round(time/maxTime*FULLNESS_LEVEL_MAX)).isAnimationFinished(animationTime) && portal.isNotShrinking()){
-            portal.shrink();
-        }else if(currentAnimations == finishAnimations && !currentAnimations.get(Math.round(time/maxTime*FULLNESS_LEVEL_MAX)).isAnimationFinished(animationTime)){
-            time = Interpolation.linear.apply(0f, prevMaxTime, 1f-animationTime/currentAnimations.get(Math.round(time/maxTime*FULLNESS_LEVEL_MAX)).getAnimationDuration());
         }
         super.act(delta);
         for(int i = 0; i < attackParticleEffects.size; i++) {

@@ -7,12 +7,14 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -41,6 +43,7 @@ import com.wgsoft.game.timesaver.objects.game.Wreckage;
 
 import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
+//TODO More levels
 public class GameScreen implements Screen, Localizable {
     public static final int BUILDING_COUNT = 4;
     public static final int TIME_LABEL_AFTER_DOT_COUNT = 1;
@@ -74,8 +77,13 @@ public class GameScreen implements Screen, Localizable {
     private final InputMultiplexer inputMultiplexer;
 
     private Player player;
+    private Bubble bubble;
+    private Portal portal;
+    private Hatch hatch;
     private float maxTime;
 
+    private boolean finishing;
+    private int level;
     private final TextButton menuButton;
     private final ProgressBar timeProgressBar;
     private final TextButton settingsButton;
@@ -325,7 +333,8 @@ public class GameScreen implements Screen, Localizable {
         victoryStage.addActor(victoryTable);
     }
 
-    public void createGame(){
+    public void createGame(int level){
+        this.level = level;
         maxTime = Player.TIME_MAX_DEFAULT;
         player = null;
         game.timeFillSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
@@ -333,64 +342,139 @@ public class GameScreen implements Screen, Localizable {
         uiStage.getRoot().setTouchable(Touchable.childrenOnly);
         victoryStage.getRoot().setColor(1f, 1f, 1f, 0f);
         victoryStage.getRoot().setTouchable(Touchable.disabled);
-        createLevel();
     }
 
     public void createLevel(){
-        if(player != null){
-            maxTime = player.getMaxTime();
-        }
-        gameStage.clear();
-        Ground ground = new Ground();
-        gameStage.addActor(new Truck(2660f, ground.getTop()));
-        gameStage.addActor(new Shop(4370f, ground.getTop()));
-        player = new Player(BORDERS_LEFT[0], BORDERS_RIGHT[0], maxTime);
-        final Bubble bubble = new Bubble(player);
-        Hatch hatch = new Hatch(8950f, ground.getTop());
-        final Portal portal = new Portal(player, hatch, bubble, victoryStage, victoryStack, uiStage, blueVictoryLabel, redVictoryLabel, 8950f, ground.getTop());
-        gameStage.addActor(portal);
-        gameStage.addActor(hatch);
-        gameStage.setKeyboardFocus(player);
-        gameStage.addActor(player);
-        gameStage.addActor(ground);
-        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 1800f, 0f, false));
-        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 2670f, 0f, false));
-        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 2960f, 0f, true));
-        gameStage.addActor(new DrugDealer(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 3260f));
-        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 4650f, 490f, false));
-        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 5250f, 500f));
-        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 5350f, 0f, false));
-        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 6050f, 800f));
-        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 6900f, 580f));
-        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 7000f, 0f, false));
-        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 7150f, 780f));
-        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 8600f, 0f, false));
-        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 8500f, 580f));
-        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 9300f, 0f, false));
-        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 9200f, 800f));
-        gameStage.addActor(bubble);
-        gameStage.addAction(Actions.forever(Actions.delay(Wreckage.SPAWN_INTERVAL, Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                if(player.isNotFinishing()) {
-                    gameStage.addActor(new Wreckage(player, bubble, MathUtils.random(-BORDERS_LEFT[0], BORDERS_RIGHT[0]), gameStage.getHeight()));
+        finishing = false;
+        switch(level) {
+            case 0:
+                if (player != null) {
+                    maxTime = player.getMaxTime();
                 }
-            }
-        }))));
-        portal.addAction(Actions.run(new Runnable() {
-            @Override
-            public void run() {
-                portal.addAction(Actions.sequence(Actions.delay(MathUtils.random(HoverBoard.SPAWN_INTERVAL_MIN, HoverBoard.SPAWN_INTERVAL_MAX), Actions.run(new Runnable() {
+                gameStage.clear();
+                Ground ground = new Ground();
+                gameStage.addActor(new Truck(2660f, ground.getTop()));
+                gameStage.addActor(new Shop(4370f, ground.getTop()));
+                player = new Player(BORDERS_LEFT[level], BORDERS_RIGHT[level], maxTime);
+                bubble = new Bubble(player);
+                hatch = new Hatch(8950f, ground.getTop());
+                portal = new Portal(player, 8950f, ground.getTop());
+                gameStage.addActor(portal);
+                gameStage.addActor(hatch);
+                gameStage.setKeyboardFocus(player);
+                gameStage.addActor(player);
+                gameStage.addActor(ground);
+                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 1800f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2670f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2960f, 0f, true));
+                gameStage.addActor(new DrugDealer(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 3260f));
+                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 4650f, 490f, false));
+                gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 5250f, 500f));
+                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 5350f, 0f, false));
+                gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 6050f, 800f));
+                gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 6900f, 580f));
+                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 7000f, 0f, false));
+                gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 7150f, 780f));
+                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8600f, 0f, false));
+                gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8500f, 580f));
+                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9300f, 0f, false));
+                gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9200f, 800f));
+                gameStage.addActor(bubble);
+                gameStage.addAction(Actions.forever(Actions.delay(Wreckage.SPAWN_INTERVAL, Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        if(player.isNotFinishing()){
-                            gameStage.addActor(new HoverBoard(player, bubble, portal.getX()-HoverBoard.SIZE, portal.getY()+HoverBoard.SPAWN_OFFSET_Y, false));
+                        if (!finishing) {
+                            gameStage.addActor(new Wreckage(player, bubble, MathUtils.random(-BORDERS_LEFT[level], BORDERS_RIGHT[level]), gameStage.getHeight()));
                         }
                     }
-                })), Actions.run(this)));
-            }
-        }));
+                }))));
+                portal.addAction(Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        portal.addAction(Actions.sequence(Actions.delay(MathUtils.random(HoverBoard.SPAWN_INTERVAL_MIN, HoverBoard.SPAWN_INTERVAL_MAX), Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!finishing) {
+                                    gameStage.addActor(new HoverBoard(player, bubble, portal.getX() - HoverBoard.SIZE, portal.getY() + HoverBoard.SPAWN_OFFSET_Y, false));
+                                }
+                            }
+                        })), Actions.run(this)));
+                    }
+                }));
+                break;
+        }
         katanaCheckBox.setChecked(true);
+    }
+
+    public void finish(){
+        finishing = true;
+        switch (level){
+            case 0:
+                bubble.addAction(Actions.alpha(0f));
+                player.setAnimations(player.getStayAnimations());
+                if(portal.getX(Align.center) > player.getX(Align.center)){
+                    player.setScaleX(1f/Player.WIDTH_SCALE);
+                }else{
+                    player.setScaleX(-1f/Player.WIDTH_SCALE);
+                }
+                final float currentTime = player.getTime();
+                player.addAction(Actions.sequence(new TemporalAction(Player.TIME_FILL_DURATION, Interpolation.fade) {
+                    @Override
+                    protected void update(float percent) {
+                        player.setTime(Interpolation.linear.apply(currentTime, maxTime, percent));
+                    }
+                }, Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        player.setAnimations(player.getFinishAnimations());
+                    }
+                }), new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        player.setTime(Interpolation.linear.apply(0f, maxTime, 1f - player.getAnimationTime() / player.getCurrentAnimations().get(Math.round(player.getTime() / maxTime * Player.FULLNESS_LEVEL_MAX)).getAnimationDuration()));
+                        return player.getCurrentAnimations().get(Math.round(player.getTime() / maxTime * Player.FULLNESS_LEVEL_MAX)).isAnimationFinished(player.getAnimationTime());
+                    }
+                }, Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        player.setTime(0f);
+                        portal.shrink();
+                    }
+                }), new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        return portal.isShrinkFinished();
+                    }
+                }, Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        game.hatchSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+                        hatch.addAction(Actions.moveBy(-hatch.getWidth(), 0f, Hatch.MOVE_DURATION, Interpolation.fade));
+                    }
+                }), Actions.delay(Hatch.MOVE_DURATION, Actions.sequence(Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        player.setAnimations(player.getRunAnimations());
+                    }
+                }), Actions.moveToAligned(hatch.getX(Align.center), player.getY(), Align.center | Align.bottom, Player.MOVE_DURATION, Interpolation.fade), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        player.setAnimations(player.getDownAnimations());
+                    }
+                }), Actions.moveBy(0f, -(player.getY() + player.getHeight() * player.getScaleY()), Player.DOWN_DURATION, Interpolation.exp5In), Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        victoryStack.invalidate();
+                        victoryStack.validate();
+                    }
+                }), Actions.parallel(Actions.addAction(Actions.sequence(Actions.alpha(1f, GameScreen.VICTORY_ALPHA_DURATION, Interpolation.fade), Actions.touchable(Touchable.childrenOnly)), victoryStage.getRoot()), Actions.addAction(Actions.moveToAligned(0f, blueVictoryLabel.getY(), Align.right | Align.bottom, GameScreen.VICTORY_SHIFT_DURATION, Interpolation.fade), blueVictoryLabel), Actions.addAction(Actions.moveTo(victoryStage.getWidth(), redVictoryLabel.getY(), GameScreen.VICTORY_SHIFT_DURATION, Interpolation.fade), redVictoryLabel))))));
+                uiStage.addAction(Actions.sequence(Actions.touchable(Touchable.disabled), Actions.alpha(0f, GameScreen.VICTORY_UI_FADE_DURATION, Interpolation.fade)));
+                break;
+        }
+    }
+
+    public boolean isNotFinishing(){
+        return !finishing;
     }
 
     @Override
@@ -415,7 +499,7 @@ public class GameScreen implements Screen, Localizable {
     public void render(float delta) {
         backgroundStage.act(delta);
         gameStage.act(delta);
-        if(player.getStage() == null || player.getTime() < 0f){
+        if(player.getStage() == null || !finishing && player.getTime() < 0f){
             if(player.getStage() != null) {
                 game.timeOverSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
             }
