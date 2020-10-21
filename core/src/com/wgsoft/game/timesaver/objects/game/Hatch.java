@@ -14,11 +14,6 @@ public class Hatch extends Actor {
     }
 
     @Override
-    public void act(float delta) {
-        super.act(delta);
-    }
-
-    @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(game.skin.getRegion("game/hatch"), getX(), getY(), getWidth(), getHeight());
     }

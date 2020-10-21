@@ -87,11 +87,6 @@ public class Truck extends Actor implements Solid {
     }
 
     @Override
-    public void act(float delta) {
-        super.act(delta);
-    }
-
-    @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(game.skin.getRegion("game/truck"), getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
     }

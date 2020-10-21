@@ -255,11 +255,6 @@ public class Shop extends Actor implements Solid {
     }
 
     @Override
-    public void act(float delta) {
-        super.act(delta);
-    }
-
-    @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(game.skin.getRegion("game/shop"), getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
     }
