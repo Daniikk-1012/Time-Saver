@@ -27,12 +27,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.timesaver.Localizable;
+import com.wgsoft.game.timesaver.objects.game.Bench;
 import com.wgsoft.game.timesaver.objects.game.Bubble;
 import com.wgsoft.game.timesaver.objects.game.DrugDealer;
 import com.wgsoft.game.timesaver.objects.game.Eye;
 import com.wgsoft.game.timesaver.objects.game.Ground;
 import com.wgsoft.game.timesaver.objects.game.Hatch;
 import com.wgsoft.game.timesaver.objects.game.HoverBoard;
+import com.wgsoft.game.timesaver.objects.game.Lamp;
+import com.wgsoft.game.timesaver.objects.game.Light;
 import com.wgsoft.game.timesaver.objects.game.Player;
 import com.wgsoft.game.timesaver.objects.game.PlayerItem;
 import com.wgsoft.game.timesaver.objects.game.Portal;
@@ -347,6 +350,17 @@ public class GameScreen implements Screen, Localizable {
                     maxTime = player.getMaxTime();
                 }
                 gameStage.clear();
+                Lamp[] lamps = new Lamp[]{
+                        new Lamp(115f, Ground.HEIGHT),
+                        new Lamp(3015f, Ground.HEIGHT),
+                        new Lamp(5400f, Ground.HEIGHT),
+                        new Lamp(9090f, Ground.HEIGHT)
+                };
+                for (Lamp lamp : lamps) {
+                    gameStage.addActor(lamp);
+                }
+                gameStage.addActor(new Bench(500f, Ground.HEIGHT));
+                gameStage.addActor(new Bench(6000f, Ground.HEIGHT));
                 gameStage.addActor(new Truck(2660f, Ground.HEIGHT));
                 gameStage.addActor(new Shop(4370f, Ground.HEIGHT));
                 player = new Player(BORDERS_LEFT[level], BORDERS_RIGHT[level], maxTime);
@@ -373,6 +387,9 @@ public class GameScreen implements Screen, Localizable {
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8500f, 580f));
                 gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9300f, 0f, false));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9200f, 800f));
+                for (Lamp lamp : lamps) {
+                    gameStage.addActor(new Light(lamp));
+                }
                 gameStage.addActor(bubble);
                 gameStage.addAction(Actions.forever(Actions.delay(Wreckage.SPAWN_INTERVAL, Actions.run(new Runnable() {
                     @Override
