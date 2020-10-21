@@ -253,8 +253,6 @@ public class Player extends Actor {
             case TIME_MINE:
                 timeMine();
                 break;
-            case HOURGLASS:
-                break;
         }
     }
 

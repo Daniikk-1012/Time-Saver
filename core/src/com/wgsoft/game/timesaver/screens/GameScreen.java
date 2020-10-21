@@ -82,7 +82,6 @@ public class GameScreen implements Screen, Localizable {
     private final Label timeLabel;
     private final CheckBox katanaCheckBox;
     private final CheckBox timeMineCheckBox;
-    //private CheckBox hourglassCheckBox; TODO: Add hourglass item
 
     private final Label timeOverLabel;
 
@@ -204,10 +203,6 @@ public class GameScreen implements Screen, Localizable {
                     case Input.Keys.NUMPAD_2:
                         timeMineCheckBox.setChecked(true);
                         return true;
-                    /*case Input.Keys.NUM_3:
-                    case Input.Keys.NUMPAD_3:
-                        hourglassCheckBox.setChecked(true);
-                        return true;*/
                 }
                 return false;
             }
@@ -268,27 +263,6 @@ public class GameScreen implements Screen, Localizable {
         inventoryTable.add().growX();
 
         inventoryTable.row();
-
-        /*hourglassCheckBox = new CheckBox(null, game.skin, "inventory");
-        hourglassCheckBox.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if(hourglassCheckBox.isChecked()){
-                    player.setPlayerItem(PlayerItem.HOURGLASS);
-                }
-            }
-        });
-        Image hourglassImage = new Image(game.skin, "check-box/inventory/icon/hourglass");
-        hourglassImage.setTouchable(Touchable.disabled);
-        inventoryTable.stack(hourglassCheckBox, hourglassImage);
-
-        Label hourglassLabel = new Label("3", game.skin, "boldestMedium");
-        hourglassLabel.setTouchable(Touchable.disabled);
-        inventoryTable.add(hourglassLabel);
-
-        inventoryTable.add().growX();
-
-        inventoryTable.row();*/
 
         inventoryTable.add().growY();
 
