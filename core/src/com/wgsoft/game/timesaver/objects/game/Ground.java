@@ -7,8 +7,10 @@ import com.badlogic.gdx.utils.Align;
 import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class Ground extends Actor implements Solid {
+    public static final float HEIGHT = 65f;
+
     public Ground(){
-        setHeight(game.skin.getRegion("game/ground").getRegionHeight());
+        setHeight(HEIGHT);
     }
 
     @Override
