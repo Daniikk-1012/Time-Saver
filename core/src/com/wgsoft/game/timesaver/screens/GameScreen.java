@@ -347,18 +347,17 @@ public class GameScreen implements Screen, Localizable {
                     maxTime = player.getMaxTime();
                 }
                 gameStage.clear();
-                Ground ground = new Ground();
-                gameStage.addActor(new Truck(2660f, ground.getTop()));
-                gameStage.addActor(new Shop(4370f, ground.getTop()));
+                gameStage.addActor(new Truck(2660f, Ground.HEIGHT));
+                gameStage.addActor(new Shop(4370f, Ground.HEIGHT));
                 player = new Player(BORDERS_LEFT[level], BORDERS_RIGHT[level], maxTime);
-                bubble = new Bubble(player);
-                hatch = new Hatch(8950f, ground.getTop());
-                portal = new Portal(player, 8950f, ground.getTop());
+                portal = new Portal(player, 8950f, Ground.HEIGHT);
                 gameStage.addActor(portal);
+                hatch = new Hatch(8950f, Ground.HEIGHT);
                 gameStage.addActor(hatch);
                 gameStage.setKeyboardFocus(player);
                 gameStage.addActor(player);
-                gameStage.addActor(ground);
+                gameStage.addActor(new Ground());
+                bubble = new Bubble(player);
                 gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 1800f, 0f, false));
                 gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2670f, 0f, false));
                 gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2960f, 0f, true));
