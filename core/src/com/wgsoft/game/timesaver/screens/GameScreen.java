@@ -58,6 +58,8 @@ public class GameScreen implements Screen, Localizable {
     public static final float GRAVITY = 1500f;
     public static final float TIME_OVER_ANIMATION_DURATION = 3f;
     public static final float TIME_FILL_SOUND_DELAY = 2f;
+    public static final float BUILDING_WIDTH = 1920f;
+    public static final float BUILDING_HEIGHT = 471f;
 
     public static final float[] BORDERS_LEFT = new float[]{
             -960f
@@ -130,26 +132,19 @@ public class GameScreen implements Screen, Localizable {
         };
         backgroundStage.addActor(backgroundActor);
 
-        float buildingsWidth = 0f;
-        for(int i = 0; i < BUILDING_COUNT; i++){
-            buildingsWidth += game.skin.getRegion("game/building/"+i).getRegionWidth();
-        }
-        final float finalBuildingsWidth = buildingsWidth;
         Actor buildingsActor = new Actor(){
             @Override
             public void act(float delta) {
                 setSize(getStage().getWidth(), getStage().getHeight());
-                setX((float)Math.round((getStage().getCamera().position.x+getStage().getWidth()/2f)/finalBuildingsWidth)*finalBuildingsWidth-getStage().getWidth()/2f);
+                setX((float)Math.round((getStage().getCamera().position.x+getStage().getWidth()/2f)/(BUILDING_WIDTH*BUILDING_COUNT))*(BUILDING_WIDTH*BUILDING_COUNT)-getStage().getWidth()/2f);
                 super.act(delta);
             }
 
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                float offset = 0f;
                 for(int i = 0; i < BUILDING_COUNT; i++){
-                    batch.draw(game.skin.getRegion("game/building/"+i), getX()+offset-finalBuildingsWidth, getY(), game.skin.getRegion("game/building/"+i).getRegionWidth(), game.skin.getRegion("game/building/"+i).getRegionHeight());
-                    batch.draw(game.skin.getRegion("game/building/"+i), getX()+offset, getY(), game.skin.getRegion("game/building/"+i).getRegionWidth(), game.skin.getRegion("game/building/"+i).getRegionHeight());
-                    offset += game.skin.getRegion("game/building/"+i).getRegionWidth();
+                    batch.draw(game.skin.getRegion("game/building/"+i), getX()+BUILDING_WIDTH*(i-BUILDING_COUNT), getY(), BUILDING_WIDTH, BUILDING_HEIGHT);
+                    batch.draw(game.skin.getRegion("game/building/"+i), getX()+BUILDING_WIDTH*i, getY(), BUILDING_WIDTH, BUILDING_HEIGHT);
                 }
             }
         };
