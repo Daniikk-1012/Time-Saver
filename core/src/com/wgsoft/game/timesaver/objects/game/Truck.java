@@ -14,7 +14,7 @@ public class Truck extends Actor implements Solid {
     public static final float MAX_OFFSET = 50f;
 
     public Truck(float x, float y){
-        setBounds(x, y, WIDTH*WIDTH_SCALE, WIDTH*HEIGHT_SCALE);
+        setBounds(x, y, WIDTH*WIDTH_SCALE, HEIGHT*HEIGHT_SCALE);
         setOrigin(Align.right|Align.bottom);
         setScale(1f/WIDTH_SCALE, 1f/HEIGHT_SCALE);
     }
