@@ -4,16 +4,26 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class TimeMine extends Actor {
+    public static final float SPEED = 2000f;
+    public static final float SHIFT_INTERVAL = 0.2f;
+    public static final float SHIFT_AMPLITUDE = 50f;
+    public static final float TIME_CONSUMPTION = 5f;
+    public static final float SIZE = 62.5f;
+
+    private final float borderLeft;
+    private final float borderRight;
     private final boolean right;
     private float time;
     private float difference;
 
     //x and y are for left bottom corner
-    public TimeMine(float x, float y, boolean right){
-        setBounds(x, y, GAME_THROWABLE_SIZE, GAME_THROWABLE_SIZE);
+    public TimeMine(float borderLeft, float borderRight, float x, float y, boolean right){
+        this.borderLeft = borderLeft;
+        this.borderRight = borderRight;
+        setBounds(x, y, SIZE, SIZE);
         this.right = right;
     }
 
@@ -24,15 +34,15 @@ public class TimeMine extends Actor {
     @Override
     public void act(float delta) {
         time += delta;
-        while(time >= GAME_TIME_MINE_SHIFT_INTERVAL){
-            difference = MathUtils.random(-GAME_TIME_MINE_SHIFT_AMPLITUDE, GAME_TIME_MINE_SHIFT_AMPLITUDE);
+        while(time >= SHIFT_INTERVAL){
+            difference = MathUtils.random(-SHIFT_AMPLITUDE, SHIFT_AMPLITUDE);
             moveBy(0f, difference);
-            time -= GAME_TIME_MINE_SHIFT_INTERVAL;
+            time -= SHIFT_INTERVAL;
         }
         if(right){
-            moveBy(delta*GAME_TIME_MINE_SPEED, 0f);
+            moveBy(delta*SPEED, 0f);
         }else{
-            moveBy(-delta*GAME_TIME_MINE_SPEED, 0f);
+            moveBy(-delta*SPEED, 0f);
         }
         for(int i = 0; i < getStage().getActors().size; i++){
             if(getStage().getActors().get(i) instanceof Solid){
@@ -43,14 +53,14 @@ public class TimeMine extends Actor {
             }
         }
         for(int i = 0; i < getStage().getActors().size; i++){
-            if(getStage().getActors().get(i) instanceof Hitable){
-                ((Hitable) getStage().getActors().get(i)).hit(this);
+            if(getStage().getActors().get(i) instanceof Monster){
+                ((Monster) getStage().getActors().get(i)).hit(this);
                 if(getStage() == null){
                     return;
                 }
             }
         }
-        if(getRight() < GAME_BORDER_LEFT || getX() > GAME_BORDER_RIGHT){
+        if(getRight() < borderLeft || getX() > borderRight){
             remove();
             return;
         }

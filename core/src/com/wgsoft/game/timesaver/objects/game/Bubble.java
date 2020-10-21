@@ -5,9 +5,13 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class Bubble extends Actor {
+    public static final float SIZE_MIN = 450f;
+    public static final float SIZE_MAX = 1400f;
+    public static final float OUTSIDE_SPEED_SCALE = 0.4f;
+
     private final Player player;
 
     public Bubble(Player player){
@@ -16,7 +20,7 @@ public class Bubble extends Actor {
 
     @Override
     public void act(float delta) {
-        float size = Interpolation.linear.apply(GAME_BUBBLE_SIZE_MAX, GAME_BUBBLE_SIZE_MIN, player.getTime()/player.getMaxTime());
+        float size = Interpolation.linear.apply(SIZE_MAX, SIZE_MIN, player.getTime()/player.getMaxTime());
         setSize(size, size);
         setPosition(player.getX(Align.center), player.getY(Align.center), Align.center);
         super.act(delta);

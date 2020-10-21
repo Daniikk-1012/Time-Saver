@@ -4,10 +4,16 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
+import com.wgsoft.game.timesaver.screens.GameScreen;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class Drug extends Actor {
+    public static final float ROTATION_SPEED_AMPLITUDE = 180f;
+    public static final float SPEED = 700f;
+    public static final float IMPULSE = 700f;
+    public static final float SIZE = 62.5f;
+
     private final Player player;
     private final Bubble bubble;
     private final boolean right;
@@ -17,10 +23,10 @@ public class Drug extends Actor {
     public Drug(Player player, Bubble bubble, float x, float y, boolean right){
         this.player = player;
         this.bubble = bubble;
-        setBounds(x, y, GAME_THROWABLE_SIZE, GAME_THROWABLE_SIZE);
+        setBounds(x, y, SIZE, SIZE);
         setOrigin(Align.center);
-        rotationSpeed = MathUtils.random(-GAME_DRUG_ROTATION_SPEED_AMPLITUDE, GAME_DRUG_ROTATION_SPEED_AMPLITUDE);
-        velocity = GAME_DRUG_IMPULSE;
+        rotationSpeed = MathUtils.random(-ROTATION_SPEED_AMPLITUDE, ROTATION_SPEED_AMPLITUDE);
+        velocity = IMPULSE;
         this.right = right;
     }
 
@@ -36,27 +42,27 @@ public class Drug extends Actor {
     public void act(float delta) {
         boolean inBubble = sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) < sqr(bubble.getWidth()/2f);
         if(inBubble){
-            velocity -= delta * GAME_GRAVITY;
+            velocity -= delta * GameScreen.GRAVITY;
         }else{
-            velocity -= delta * GAME_GRAVITY * GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
+            velocity -= delta * GameScreen.GRAVITY * Bubble.OUTSIDE_SPEED_SCALE;
         }
         if(right){
             if(inBubble) {
-                moveBy(delta * GAME_DRUG_SPEED, delta * velocity);
+                moveBy(delta * SPEED, delta * velocity);
             }else{
-                moveBy(delta * GAME_DRUG_SPEED * GAME_OUTSIDE_BUBBLE_SPEED_SCALE, delta * velocity * GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
+                moveBy(delta * SPEED * Bubble.OUTSIDE_SPEED_SCALE, delta * velocity * Bubble.OUTSIDE_SPEED_SCALE);
             }
         }else{
             if(inBubble) {
-                moveBy(-delta * GAME_DRUG_SPEED, delta * velocity);
+                moveBy(-delta * SPEED, delta * velocity);
             }else{
-                moveBy(-delta * GAME_DRUG_SPEED * GAME_OUTSIDE_BUBBLE_SPEED_SCALE, delta * velocity * GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
+                moveBy(-delta * SPEED * Bubble.OUTSIDE_SPEED_SCALE, delta * velocity * Bubble.OUTSIDE_SPEED_SCALE);
             }
         }
         if(inBubble) {
             rotateBy(delta * rotationSpeed);
         }else{
-            rotateBy(delta * rotationSpeed * GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
+            rotateBy(delta * rotationSpeed * Bubble.OUTSIDE_SPEED_SCALE);
         }
         for(int i = 0; i < getStage().getActors().size; i++){
             if(getStage().getActors().get(i) instanceof Solid){

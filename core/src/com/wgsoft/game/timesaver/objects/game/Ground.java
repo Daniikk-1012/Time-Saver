@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class Ground extends Actor implements Solid {
     public Ground(){

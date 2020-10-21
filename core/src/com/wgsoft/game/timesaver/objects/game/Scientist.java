@@ -6,12 +6,26 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
+import com.wgsoft.game.timesaver.screens.GameScreen;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
-public class Scientist extends Actor implements Hitable {
+public class Scientist extends Actor implements Monster {
+    public static final float WIDTH_SCALE = 0.5f;
+    public static final float HEIGHT_SCALE = 1f;
+    public static final float STAY_FRAME_DURATION = 0.5f;
+    public static final float DIE_FRAME_DURATION = 0.1f;
+    public static final float RUN_FRAME_DURATION = 0.4f;
+    public static final float ATTACK_FRAME_DURATION = 0.2f;
+    public static final float DEATH_MAX_TIME_BONUS = 0.5f;
+    public static final float SPEED = 100f;
+    public static final float ATTACK_INTERVAL = 1f;
+    public static final float SIZE = 250f;
+
     private final Player player;
     private final Bubble bubble;
+    private final float borderLeft;
+    private final float borderRight;
     private final Animation<TextureRegion> stayAnimation;
     private final Animation<TextureRegion> runAnimation;
     private final Animation<TextureRegion> attackAnimation;
@@ -23,20 +37,22 @@ public class Scientist extends Actor implements Hitable {
     private final ParticleEffectPool.PooledEffect bloodParticleEffect;
 
     //x is for left side
-    public Scientist(Player player, Bubble bubble, float x, float y, boolean right){
+    public Scientist(Player player, Bubble bubble, float borderLeft, float borderRight, float x, float y, boolean right){
         this.player = player;
         this.bubble = bubble;
-        setBounds(x, y, GAME_SCIENTIST_WIDTH_SCALE*GAME_UNIT_SIZE, GAME_SCIENTIST_HEIGHT_SCALE*GAME_UNIT_SIZE);
+        this.borderLeft = borderLeft;
+        this.borderRight = borderRight;
+        setBounds(x, y, SIZE*WIDTH_SCALE, SIZE*HEIGHT_SCALE);
         setOrigin(Align.right|Align.bottom);
         if(right) {
-            setScale(1f / GAME_SCIENTIST_WIDTH_SCALE, 1f / GAME_SCIENTIST_HEIGHT_SCALE);
+            setScale(1f / WIDTH_SCALE, 1f / HEIGHT_SCALE);
         }else{
-            setScale(-1f / GAME_SCIENTIST_WIDTH_SCALE, 1f / GAME_SCIENTIST_HEIGHT_SCALE);
+            setScale(-1f / WIDTH_SCALE, 1f / HEIGHT_SCALE);
         }
-        stayAnimation = new Animation<>(GAME_SCIENTIST_STAY_FRAME_DURATION, game.skin.getRegions("game/scientist/stay"), Animation.PlayMode.LOOP);
-        runAnimation = new Animation<>(GAME_SCIENTIST_RUN_FRAME_DURATION, game.skin.getRegions("game/scientist/run"), Animation.PlayMode.LOOP);
-        attackAnimation = new Animation<>(GAME_SCIENTIST_ATTACK_FRAME_DURATION, game.skin.getRegions("game/scientist/attack"));
-        dieAnimation = new Animation<>(GAME_SCIENTIST_DIE_FRAME_DURATION, game.skin.getRegions("game/scientist/die"));
+        stayAnimation = new Animation<>(STAY_FRAME_DURATION, game.skin.getRegions("game/scientist/stay"), Animation.PlayMode.LOOP);
+        runAnimation = new Animation<>(RUN_FRAME_DURATION, game.skin.getRegions("game/scientist/run"), Animation.PlayMode.LOOP);
+        attackAnimation = new Animation<>(ATTACK_FRAME_DURATION, game.skin.getRegions("game/scientist/attack"));
+        dieAnimation = new Animation<>(DIE_FRAME_DURATION, game.skin.getRegions("game/scientist/die"));
         setAnimation(stayAnimation);
         bloodParticleEffect = game.bloodParticleEffectPool.obtain();
         bloodParticleEffect.start();
@@ -63,9 +79,9 @@ public class Scientist extends Actor implements Hitable {
 
     private void die(){
         setAnimation(dieAnimation);
-        game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+        game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
         bloodParticleEffect.allowCompletion();
-        player.addMaxTime(GAME_SCIENTIST_DEATH_MAX_TIME_BONUS);
+        player.addMaxTime(DEATH_MAX_TIME_BONUS);
     }
 
     public float getVelocity(){
@@ -91,69 +107,69 @@ public class Scientist extends Actor implements Hitable {
         if(inBubble){
             animationTime += delta;
         }else{
-            animationTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
+            animationTime += delta*Bubble.OUTSIDE_SPEED_SCALE;
         }
         if(currentAnimation != dieAnimation) {
-            if(player.getX(Align.center) < getX(Align.center) && getX(Align.center)-player.getRight() < GAME_MONSTER_VISIBLE_RADIUS){
+            if(player.getX(Align.center) < getX(Align.center) && getX(Align.center)-player.getRight() < Monster.VISIBLE_RADIUS){
                 if(inBubble) {
                     attackTime += delta;
                 }else{
-                    attackTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
+                    attackTime += delta*Bubble.OUTSIDE_SPEED_SCALE;
                 }
-                while(attackTime >= GAME_SCIENTIST_ATTACK_INTERVAL){
-                    getStage().addActor(new Bottle(player, bubble, getX()-GAME_THROWABLE_SIZE, getY(Align.center)-GAME_THROWABLE_SIZE/2f, false));
+                while(attackTime >= ATTACK_INTERVAL){
+                    getStage().addActor(new Bottle(player, bubble, getX()-Bottle.SIZE, getY(Align.center)-Bottle.SIZE/2f, false));
                     if(currentAnimation != attackAnimation) {
                         setAnimation(attackAnimation);
                     }
-                    attackTime -= GAME_SCIENTIST_ATTACK_INTERVAL;
+                    attackTime -= ATTACK_INTERVAL;
                 }
                 if(inBubble) {
-                    moveBy(-delta * GAME_SCIENTIST_SPEED, 0f);
+                    moveBy(-delta * SPEED, 0f);
                 }else{
-                    moveBy(-delta * GAME_SCIENTIST_SPEED * GAME_OUTSIDE_BUBBLE_SPEED_SCALE, 0f);
+                    moveBy(-delta * SPEED * Bubble.OUTSIDE_SPEED_SCALE, 0f);
                 }
                 if((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != runAnimation){
                     setAnimation(runAnimation);
                 }
-                setScaleX(-1f/GAME_SCIENTIST_WIDTH_SCALE);
-            }else if(player.getX(Align.center) > getX(Align.center) && player.getX()-getX(Align.center) < GAME_MONSTER_VISIBLE_RADIUS){
+                setScaleX(-1f/WIDTH_SCALE);
+            }else if(player.getX(Align.center) > getX(Align.center) && player.getX()-getX(Align.center) < Monster.VISIBLE_RADIUS){
                 if(inBubble) {
                     attackTime += delta;
                 }else{
-                    attackTime += delta*GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
+                    attackTime += delta*Bubble.OUTSIDE_SPEED_SCALE;
                 }
-                while(attackTime >= GAME_SCIENTIST_ATTACK_INTERVAL){
-                    getStage().addActor(new Bottle(player, bubble, getRight(), getY(Align.center)-GAME_THROWABLE_SIZE/2f, true));
+                while(attackTime >= ATTACK_INTERVAL){
+                    getStage().addActor(new Bottle(player, bubble, getRight(), getY(Align.center)-Bottle.SIZE/2f, true));
                     if(currentAnimation != attackAnimation) {
                         setAnimation(attackAnimation);
                     }
-                    attackTime -= GAME_SCIENTIST_ATTACK_INTERVAL;
+                    attackTime -= ATTACK_INTERVAL;
                 }
                 if(inBubble) {
-                    moveBy(delta * GAME_SCIENTIST_SPEED, 0f);
+                    moveBy(delta * SPEED, 0f);
                 }else{
-                    moveBy(delta * GAME_SCIENTIST_SPEED * GAME_OUTSIDE_BUBBLE_SPEED_SCALE, 0f);
+                    moveBy(delta * SPEED * Bubble.OUTSIDE_SPEED_SCALE, 0f);
                 }
                 if((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != runAnimation){
                     setAnimation(runAnimation);
                 }
-                setScaleX(1f/GAME_SCIENTIST_WIDTH_SCALE);
+                setScaleX(1f/WIDTH_SCALE);
             }else if((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != stayAnimation){
                 setAnimation(stayAnimation);
             }
-            if (getX() < GAME_BORDER_LEFT && getRight() > GAME_BORDER_RIGHT) {
-                setX((GAME_BORDER_LEFT + GAME_BORDER_RIGHT) / 2f, Align.center);
-            } else if (getX() < GAME_BORDER_LEFT) {
-                setX(GAME_BORDER_LEFT);
-            } else if (getRight() > GAME_BORDER_RIGHT) {
-                setX(GAME_BORDER_RIGHT, Align.right);
+            if (getX() < borderLeft && getRight() > borderRight) {
+                setX((borderLeft + borderRight) / 2f, Align.center);
+            } else if (getX() < borderLeft) {
+                setX(borderLeft);
+            } else if (getRight() > borderRight) {
+                setX(borderRight, Align.right);
             }
             if(inBubble) {
-                velocity -= delta * GAME_GRAVITY;
+                velocity -= delta * GameScreen.GRAVITY;
                 moveBy(0f, delta * velocity);
             }else{
-                velocity -= delta * GAME_GRAVITY * GAME_OUTSIDE_BUBBLE_SPEED_SCALE;
-                moveBy(0f, delta * velocity * GAME_OUTSIDE_BUBBLE_SPEED_SCALE);
+                velocity -= delta * GameScreen.GRAVITY * Bubble.OUTSIDE_SPEED_SCALE;
+                moveBy(0f, delta * velocity * Bubble.OUTSIDE_SPEED_SCALE);
             }
             for (int i = 0; i < getStage().getActors().size; i++) {
                 if (getStage().getActors().get(i) instanceof Solid) {

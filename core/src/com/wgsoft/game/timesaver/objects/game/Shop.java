@@ -4,15 +4,20 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class Shop extends Actor implements Solid {
+    public static final float WIDTH = 987;
+    public static final float HEIGHT = 440f;
+    public static final float WIDTH_SCALE = 0.8f;
+    public static final float HEIGHT_SCALE = 1f;
+
     //It gets width and height from TextureRegion of platform
     //x and y are left-bottom coordinates
     public Shop(float x, float y){
-        setBounds(x, y, game.skin.getRegion("game/shop").getRegionWidth()*GAME_SHOP_WIDTH_SCALE, game.skin.getRegion("game/shop").getRegionHeight()*GAME_SHOP_HEIGHT_SCALE);
+        setBounds(x, y, WIDTH*WIDTH_SCALE, HEIGHT*HEIGHT_SCALE);
         setOrigin(Align.center|Align.bottom);
-        setScale(1f/GAME_SHOP_WIDTH_SCALE, 1f/GAME_SHOP_HEIGHT_SCALE);
+        setScale(1f/WIDTH_SCALE, 1f/HEIGHT_SCALE);
     }
     @Override
     public void overlap(Player player) {

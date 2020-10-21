@@ -27,9 +27,14 @@ import com.wgsoft.game.timesaver.screens.MenuScreen;
 
 import java.util.Locale;
 
-import static com.wgsoft.game.timesaver.Const.*;
-
 public class MyGdxGame extends Game implements Localizable{
+	public static final float SCREEN_WIDTH = 1920f;
+	public static final float SCREEN_HEIGHT = 1080f;
+	public static final float SOUND_DEFAULT = 0.5f;
+	public static final float MUSIC_DEFAULT = 0.5f;
+
+	public static MyGdxGame game;
+
 	public SpriteBatch batch;
 
 	public Sound slashSound;
@@ -126,8 +131,8 @@ public class MyGdxGame extends Game implements Localizable{
 	}
 
 	public void applyMusicVolume(){
-		menuMusic.setVolume(prefs.getFloat("settings.music", SETTINGS_MUSIC_DEFAULT));
-		commonMusic.setVolume(prefs.getFloat("settings.music", SETTINGS_MUSIC_DEFAULT));
+		menuMusic.setVolume(prefs.getFloat("settings.music", MUSIC_DEFAULT));
+		commonMusic.setVolume(prefs.getFloat("settings.music", MUSIC_DEFAULT));
 	}
 
 	@Override

@@ -10,10 +10,16 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.wgsoft.game.timesaver.screens.GameScreen;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class Portal extends Actor {
+    public static final float WIDTH = 250f;
+    public static final float HEIGHT = 375f;
+    public static final float STAY_FRAME_DURATION = 0.2f;
+    public static final float SHRINK_FRAME_DURATION = 0.1f;
+
     private final Player player;
     private final Hatch hatch;
     private final Bubble bubble;
@@ -36,9 +42,9 @@ public class Portal extends Actor {
         this.uiStage = uiStage;
         this.blueVictoryLabel = blueVictoryLabel;
         this.redVictoryLabel = redVictoryLabel;
-        setBounds(x, y, GAME_PORTAL_WIDTH, GAME_PORTAL_HEIGHT);
-        shrinkAnimation = new Animation<>(GAME_PORTAL_SHRINK_FRAME_DURATION, game.skin.getRegions("game/portal/shrink"));
-        setAnimation(new Animation<>(GAME_PORTAL_STAY_FRAME_DURATION, game.skin.getRegions("game/portal/stay"), Animation.PlayMode.LOOP_PINGPONG));
+        setBounds(x, y, WIDTH, HEIGHT);
+        shrinkAnimation = new Animation<>(SHRINK_FRAME_DURATION, game.skin.getRegions("game/portal/shrink"));
+        setAnimation(new Animation<>(STAY_FRAME_DURATION, game.skin.getRegions("game/portal/stay"), Animation.PlayMode.LOOP_PINGPONG));
     }
 
     private void setAnimation(Animation<TextureRegion> animation){
@@ -60,14 +66,14 @@ public class Portal extends Actor {
         animationTime += delta;
         boolean killed = true;
         for(int i = 0; i < getStage().getActors().size; i++){
-            if(getStage().getActors().get(i) instanceof Hitable){
+            if(getStage().getActors().get(i) instanceof Monster){
                 killed = false;
                 break;
             }
         }
         if(killed && player.isNotFinishing() && currentAnimation != shrinkAnimation && player.isGround() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
             player.finish(this, bubble);
-            uiStage.addAction(Actions.sequence(Actions.touchable(Touchable.disabled), Actions.alpha(0f, GAME_VICTORY_UI_FADE_DURATION, Interpolation.fade)));
+            uiStage.addAction(Actions.sequence(Actions.touchable(Touchable.disabled), Actions.alpha(0f, GameScreen.VICTORY_UI_FADE_DURATION, Interpolation.fade)));
         }else if(shrinking && player.isNotMoving() && currentAnimation.isAnimationFinished(animationTime)){
             player.move(hatch, victoryStage, victoryStack, blueVictoryLabel, redVictoryLabel);
         }

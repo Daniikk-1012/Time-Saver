@@ -17,10 +17,31 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.wgsoft.game.timesaver.screens.GameScreen;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class Player extends Actor {
+    public static final int FULLNESS_LEVEL_MAX = 5;
+    public static final int STATE_COUNT = 4;
+
+    public static final float FRAME_DURATION = 0.1f;
+    public static final float WIDTH_SCALE = 0.55f;
+    public static final float HEIGHT_SCALE = 0.6f;
+    public static final float SPEED = 500f;
+    public static final float SPRINT_SCALE = 1.5f;
+    public static final float JUMP_IMPULSE = 1300f;
+    public static final float DOWN_IMPULSE = -500f;
+    public static final float ATTACK_DURATION = 0.25f;
+    public static final float ATTACK_SPEED = 2000f;
+    public static final float ATTACK_TIME_CONSUME_SPEED = 10f;
+    public static final float STATE_ALPHA_SPEED = 2f;
+    public static final float TIME_FILL_DURATION = 1f;
+    public static final float MOVE_DURATION = 1f;
+    public static final float DOWN_DURATION = 1f;
+    public static final float TIME_MAX_DEFAULT = 10f;
+    public static final float SIZE = 250f;
+
     private static class PlayerState{
         float x, y;
         float alpha;
@@ -28,6 +49,8 @@ public class Player extends Actor {
         TextureRegion region;
     }
 
+    private final float borderLeft;
+    private final float borderRight;
     private Portal portal;
     private final Array<Animation<TextureRegion>> stayAnimations;
     private final Array<Animation<TextureRegion>> runAnimations;
@@ -51,42 +74,44 @@ public class Player extends Actor {
     private boolean moving;
     private final Array<ParticleEffectPool.PooledEffect> attackParticleEffects;
 
-    public Player(float time){
+    public Player(float borderLeft, float borderRight, float time){
+        this.borderLeft = borderLeft;
+        this.borderRight= borderRight;
         prevMaxTime = maxTime = time;
         this.time = maxTime;
         stayAnimations = new Array<>();
-        for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
-            stayAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/stay"), Animation.PlayMode.LOOP));
+        for(int i = 0; i <= FULLNESS_LEVEL_MAX; i++){
+            stayAnimations.add(new Animation<>(FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/stay"), Animation.PlayMode.LOOP));
         }
         runAnimations = new Array<>();
-        for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
-            runAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/run"), Animation.PlayMode.LOOP));
+        for(int i = 0; i <= FULLNESS_LEVEL_MAX; i++){
+            runAnimations.add(new Animation<>(FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/run"), Animation.PlayMode.LOOP));
         }
         attackAnimations = new Array<>();
-        for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
-            attackAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/attack"), Animation.PlayMode.LOOP));
+        for(int i = 0; i <= FULLNESS_LEVEL_MAX; i++){
+            attackAnimations.add(new Animation<>(FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/attack"), Animation.PlayMode.LOOP));
         }
         upAnimations = new Array<>();
-        for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
-            upAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/up"), Animation.PlayMode.LOOP));
+        for(int i = 0; i <= FULLNESS_LEVEL_MAX; i++){
+            upAnimations.add(new Animation<>(FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/up"), Animation.PlayMode.LOOP));
         }
         downAnimations = new Array<>();
-        for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
-            downAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/down"), Animation.PlayMode.LOOP));
+        for(int i = 0; i <= FULLNESS_LEVEL_MAX; i++){
+            downAnimations.add(new Animation<>(FRAME_DURATION, game.skin.getRegions("game/player/"+i+"/down"), Animation.PlayMode.LOOP));
         }
         dieAnimations = new Array<>();
-        for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
-            dieAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/die")));
+        for(int i = 0; i <= FULLNESS_LEVEL_MAX; i++){
+            dieAnimations.add(new Animation<>(FRAME_DURATION, game.skin.getRegions("game/player/die")));
         }
         finishAnimations = new Array<>();
-        for(int i = 0; i <= GAME_PLAYER_FULLNESS_LEVEL_MAX; i++){
-            finishAnimations.add(new Animation<>(GAME_PLAYER_FRAME_DURATION, game.skin.getRegions("game/player/finish")));
+        for(int i = 0; i <= FULLNESS_LEVEL_MAX; i++){
+            finishAnimations.add(new Animation<>(FRAME_DURATION, game.skin.getRegions("game/player/finish")));
         }
         setAnimations(stayAnimations);
-        setSize(GAME_UNIT_SIZE*GAME_PLAYER_WIDTH_SCALE, GAME_UNIT_SIZE*GAME_PLAYER_HEIGHT_SCALE);
+        setSize(SIZE*WIDTH_SCALE, SIZE*HEIGHT_SCALE);
         setX(0f, Align.center);
         setOrigin(Align.center|Align.bottom);
-        setScale(1f/GAME_PLAYER_WIDTH_SCALE, 1f/GAME_PLAYER_HEIGHT_SCALE);
+        setScale(1f/WIDTH_SCALE, 1f/HEIGHT_SCALE);
         addListener(new InputListener(){
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
@@ -157,12 +182,12 @@ public class Player extends Actor {
         finishing = true;
         setAnimations(stayAnimations);
         if(portal.getX(Align.center) > getX(Align.center)){
-            setScaleX(1f/GAME_PLAYER_WIDTH_SCALE);
+            setScaleX(1f/WIDTH_SCALE);
         }else{
-            setScaleX(-1f/GAME_PLAYER_WIDTH_SCALE);
+            setScaleX(-1f/WIDTH_SCALE);
         }
         final float currentTime = time;
-        addAction(Actions.sequence(new TemporalAction(GAME_PLAYER_TIME_FILL_DURATION, Interpolation.fade) {
+        addAction(Actions.sequence(new TemporalAction(TIME_FILL_DURATION, Interpolation.fade) {
             @Override
             protected void update(float percent) {
                 time = Interpolation.linear.apply(currentTime, prevMaxTime, percent);
@@ -186,14 +211,14 @@ public class Player extends Actor {
     public void setPlayerItem(PlayerItem playerItem){
         if(this.playerItem != playerItem){
             this.playerItem = playerItem;
-            game.selectSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+            game.selectSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
         }
     }
 
     public void die(){
         setAnimations(dieAnimations);
-        addAction(Actions.delay(currentAnimations.get(Math.round(time / maxTime * GAME_PLAYER_FULLNESS_LEVEL_MAX)).getAnimationDuration(), Actions.removeActor()));
-        game.deathSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+        addAction(Actions.delay(currentAnimations.get(Math.round(time / maxTime * FULLNESS_LEVEL_MAX)).getAnimationDuration(), Actions.removeActor()));
+        game.deathSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
     }
 
     public boolean isNotAttacking(){
@@ -236,34 +261,34 @@ public class Player extends Actor {
     private void attack(){
         if(attackTime <= 0f) {
             playerStates.clear();
-            attackTime = GAME_PLAYER_ATTACK_DURATION;
-            game.slashSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+            attackTime = ATTACK_DURATION;
+            game.slashSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
             attackParticleEffects.add(game.attackParticleEffectPool.obtain());
         }
     }
 
     private void timeMine(){
-        if(attackTime <= 0f && time > GAME_TIME_MINE_TIME_CONSUMPTION){
+        if(attackTime <= 0f && time > TimeMine.TIME_CONSUMPTION){
             if(getScaleX() < 0f){
-                getStage().addActor(new TimeMine(getX()-GAME_THROWABLE_SIZE, getY(Align.center)-GAME_THROWABLE_SIZE/2f, false));
+                getStage().addActor(new TimeMine(borderLeft, borderRight, getX()-Bottle.SIZE, getY(Align.center)-Bottle.SIZE/2f, false));
             }else{
-                getStage().addActor(new TimeMine(getRight(), getY(Align.center)-GAME_THROWABLE_SIZE/2f, true));
+                getStage().addActor(new TimeMine(borderLeft, borderRight, getRight(), getY(Align.center)-Bottle.SIZE/2f, true));
             }
-            time -= GAME_TIME_MINE_TIME_CONSUMPTION;
+            time -= TimeMine.TIME_CONSUMPTION;
         }
     }
 
     public void jump(){
         if(ground) {
-            velocity = GAME_PLAYER_JUMP_IMPULSE;
+            velocity = JUMP_IMPULSE;
             ground = false;
-            game.jumpSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+            game.jumpSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
         }
     }
 
     public void down(){
-        if(!ground && velocity > GAME_PLAYER_DOWN_IMPULSE){
-            velocity = GAME_PLAYER_DOWN_IMPULSE;
+        if(!ground && velocity > DOWN_IMPULSE){
+            velocity = DOWN_IMPULSE;
         }
     }
 
@@ -296,26 +321,26 @@ public class Player extends Actor {
     public void move(Hatch hatch, Stage victoryStage, final Stack victoryStack, final Label blueVictoryLabel, final Label redVictoryLabel){
         moving = true;
         time = 0f;
-        game.hatchSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
-        hatch.addAction(Actions.moveBy(-hatch.getWidth(), 0f, GAME_HATCH_MOVE_DURATION, Interpolation.fade));
-        addAction(Actions.delay(GAME_HATCH_MOVE_DURATION, Actions.sequence(Actions.run(new Runnable() {
+        game.hatchSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+        hatch.addAction(Actions.moveBy(-hatch.getWidth(), 0f, Hatch.MOVE_DURATION, Interpolation.fade));
+        addAction(Actions.delay(Hatch.MOVE_DURATION, Actions.sequence(Actions.run(new Runnable() {
             @Override
             public void run() {
                 setAnimations(runAnimations);
             }
-        }), Actions.moveToAligned(hatch.getX(Align.center), getY(), Align.center|Align.bottom, GAME_PLAYER_MOVE_DURATION, Interpolation.fade), Actions.run(new Runnable() {
+        }), Actions.moveToAligned(hatch.getX(Align.center), getY(), Align.center|Align.bottom, MOVE_DURATION, Interpolation.fade), Actions.run(new Runnable() {
             @Override
             public void run() {
                 toBack();
                 setAnimations(downAnimations);
             }
-        }), Actions.moveBy(0f, -(getY()+getHeight()*getScaleY()), GAME_PLAYER_DOWN_DURATION, Interpolation.exp5In), Actions.run(new Runnable() {
+        }), Actions.moveBy(0f, -(getY()+getHeight()*getScaleY()), DOWN_DURATION, Interpolation.exp5In), Actions.run(new Runnable() {
             @Override
             public void run() {
                 victoryStack.invalidate();
                 victoryStack.validate();
             }
-        }), Actions.parallel(Actions.addAction(Actions.sequence(Actions.alpha(1f, GAME_VICTORY_ALPHA_DURATION, Interpolation.fade), Actions.touchable(Touchable.childrenOnly)), victoryStage.getRoot()), Actions.addAction(Actions.moveToAligned(0f, blueVictoryLabel.getY(), Align.right|Align.bottom, GAME_VICTORY_SHIFT_DURATION, Interpolation.fade), blueVictoryLabel), Actions.addAction(Actions.moveTo(victoryStage.getWidth(), redVictoryLabel.getY(), GAME_VICTORY_SHIFT_DURATION, Interpolation.fade), redVictoryLabel)))));
+        }), Actions.parallel(Actions.addAction(Actions.sequence(Actions.alpha(1f, GameScreen.VICTORY_ALPHA_DURATION, Interpolation.fade), Actions.touchable(Touchable.childrenOnly)), victoryStage.getRoot()), Actions.addAction(Actions.moveToAligned(0f, blueVictoryLabel.getY(), Align.right|Align.bottom, GameScreen.VICTORY_SHIFT_DURATION, Interpolation.fade), blueVictoryLabel), Actions.addAction(Actions.moveTo(victoryStage.getWidth(), redVictoryLabel.getY(), GameScreen.VICTORY_SHIFT_DURATION, Interpolation.fade), redVictoryLabel)))));
     }
 
     public boolean isNotMoving(){
@@ -334,35 +359,35 @@ public class Player extends Actor {
     public void act(float delta) {
         animationTime += delta;
         for (int i = 0; i < playerStates.size; i++) {
-            playerStates.get(i).alpha -= delta * GAME_PLAYER_STATE_ALPHA_SPEED;
+            playerStates.get(i).alpha -= delta * STATE_ALPHA_SPEED;
             if (playerStates.get(i).alpha < 0f) {
                 playerStates.get(i).alpha = 0f;
             }
         }
         if(!finishing && currentAnimations != dieAnimations) {
             if (attackTime > 0f) {
-                time -= delta * GAME_PLAYER_ATTACK_TIME_CONSUME_SPEED;
+                time -= delta * ATTACK_TIME_CONSUME_SPEED;
                 if (currentAnimations != attackAnimations) {
                     setAnimations(attackAnimations);
                 }
-                while (playerStates.size < GAME_PLAYER_STATE_COUNT * (GAME_PLAYER_ATTACK_DURATION - attackTime) / GAME_PLAYER_ATTACK_DURATION) {
+                while (playerStates.size < STATE_COUNT * (ATTACK_DURATION - attackTime) / ATTACK_DURATION) {
                     PlayerState playerState = new PlayerState();
                     playerState.x = getX();
                     playerState.y = getY();
                     playerState.alpha = 1f;
-                    playerState.region = currentAnimations.get(Math.round(time / maxTime * GAME_PLAYER_FULLNESS_LEVEL_MAX)).getKeyFrame(animationTime);
+                    playerState.region = currentAnimations.get(Math.round(time / maxTime * FULLNESS_LEVEL_MAX)).getKeyFrame(animationTime);
                     playerState.scaleX = getScaleX();
                     playerStates.add(playerState);
                 }
                 attackTime -= delta;
                 if (getScaleX() < 0f) {
-                    moveBy(-delta * GAME_PLAYER_ATTACK_SPEED, 0f);
+                    moveBy(-delta * ATTACK_SPEED, 0f);
                 } else {
-                    moveBy(delta * GAME_PLAYER_ATTACK_SPEED, 0f);
+                    moveBy(delta * ATTACK_SPEED, 0f);
                 }
                 for (int i = 0; i < getStage().getActors().size; i++) {
-                    if (getStage().getActors().get(i) instanceof Hitable) {
-                        ((Hitable) getStage().getActors().get(i)).hit(this);
+                    if (getStage().getActors().get(i) instanceof Monster) {
+                        ((Monster) getStage().getActors().get(i)).hit(this);
                     }
                 }
             } else {
@@ -375,18 +400,18 @@ public class Player extends Actor {
                 if (left != right) {
                     if (left) {
                         if (shift) {
-                            moveBy(-delta * GAME_PLAYER_SPEED * GAME_PLAYER_SPRINT_SCALE, 0f);
+                            moveBy(-delta * SPEED * SPRINT_SCALE, 0f);
                         } else {
-                            moveBy(-delta * GAME_PLAYER_SPEED, 0f);
+                            moveBy(-delta * SPEED, 0f);
                         }
-                        setScaleX(-1f / GAME_PLAYER_WIDTH_SCALE);
+                        setScaleX(-1f / WIDTH_SCALE);
                     } else {
                         if (shift) {
-                            moveBy(delta * GAME_PLAYER_SPEED * GAME_PLAYER_SPRINT_SCALE, 0f);
+                            moveBy(delta * SPEED * SPRINT_SCALE, 0f);
                         } else {
-                            moveBy(delta * GAME_PLAYER_SPEED, 0f);
+                            moveBy(delta * SPEED, 0f);
                         }
-                        setScaleX(1f / GAME_PLAYER_WIDTH_SCALE);
+                        setScaleX(1f / WIDTH_SCALE);
                     }
                     if (velocity == 0f && currentAnimations != runAnimations) {
                         setAnimations(runAnimations);
@@ -397,14 +422,14 @@ public class Player extends Actor {
                     }
                 }
             }
-            if (getX() < GAME_BORDER_LEFT && getRight() > GAME_BORDER_RIGHT) {
-                setX((GAME_BORDER_LEFT + GAME_BORDER_RIGHT) / 2f, Align.center);
-            } else if (getX() < GAME_BORDER_LEFT) {
-                setX(GAME_BORDER_LEFT);
-            } else if (getRight() > GAME_BORDER_RIGHT) {
-                setX(GAME_BORDER_RIGHT, Align.right);
+            if (getX() < borderLeft && getRight() > borderRight) {
+                setX((borderLeft + borderRight) / 2f, Align.center);
+            } else if (getX() < borderLeft) {
+                setX(borderLeft);
+            } else if (getRight() > borderRight) {
+                setX(borderRight, Align.right);
             }
-            velocity -= delta * GAME_GRAVITY;
+            velocity -= delta * GameScreen.GRAVITY;
             moveBy(0f, delta * velocity);
             for (int i = 0; i < getStage().getActors().size; i++) {
                 if (getStage().getActors().get(i) instanceof Solid) {
@@ -422,17 +447,17 @@ public class Player extends Actor {
                 }
                 ground = false;
             }
-            if (getX(Align.center) < GAME_BORDER_LEFT + getStage().getWidth() / 2f && getX(Align.center) > GAME_BORDER_RIGHT - getStage().getWidth() / 2f) {
-                getStage().getCamera().position.x = (GAME_BORDER_LEFT + GAME_BORDER_RIGHT) / 2f;
-            } else if (getX(Align.center) < GAME_BORDER_LEFT + getStage().getWidth() / 2f) {
-                getStage().getCamera().position.x = GAME_BORDER_LEFT + getStage().getWidth() / 2f;
+            if (getX(Align.center) < borderLeft + getStage().getWidth() / 2f && getX(Align.center) > borderRight - getStage().getWidth() / 2f) {
+                getStage().getCamera().position.x = (borderLeft + borderRight) / 2f;
+            } else if (getX(Align.center) < borderLeft + getStage().getWidth() / 2f) {
+                getStage().getCamera().position.x = borderLeft + getStage().getWidth() / 2f;
             } else {
-                getStage().getCamera().position.x = Math.min(getX(Align.center), GAME_BORDER_RIGHT - getStage().getWidth() / 2f);
+                getStage().getCamera().position.x = Math.min(getX(Align.center), borderRight - getStage().getWidth() / 2f);
             }
-        }else if(currentAnimations == finishAnimations &&  currentAnimations.get(Math.round(time/maxTime*GAME_PLAYER_FULLNESS_LEVEL_MAX)).isAnimationFinished(animationTime) && portal.isNotShrinking()){
+        }else if(currentAnimations == finishAnimations &&  currentAnimations.get(Math.round(time/maxTime*FULLNESS_LEVEL_MAX)).isAnimationFinished(animationTime) && portal.isNotShrinking()){
             portal.shrink();
-        }else if(currentAnimations == finishAnimations && !currentAnimations.get(Math.round(time/maxTime*GAME_PLAYER_FULLNESS_LEVEL_MAX)).isAnimationFinished(animationTime)){
-            time = Interpolation.linear.apply(0f, prevMaxTime, 1f-animationTime/currentAnimations.get(Math.round(time/maxTime*GAME_PLAYER_FULLNESS_LEVEL_MAX)).getAnimationDuration());
+        }else if(currentAnimations == finishAnimations && !currentAnimations.get(Math.round(time/maxTime*FULLNESS_LEVEL_MAX)).isAnimationFinished(animationTime)){
+            time = Interpolation.linear.apply(0f, prevMaxTime, 1f-animationTime/currentAnimations.get(Math.round(time/maxTime*FULLNESS_LEVEL_MAX)).getAnimationDuration());
         }
         super.act(delta);
         for(int i = 0; i < attackParticleEffects.size; i++) {
@@ -458,7 +483,7 @@ public class Player extends Actor {
             batch.draw(playerStates.get(i).region, playerStates.get(i).x, playerStates.get(i).y, getOriginX(), getOriginY(), getWidth(), getHeight(), playerStates.get(i).scaleX, getScaleY(), getRotation());
         }
         batch.setColor(1f, 1f, 1f, 1f);
-        batch.draw(currentAnimations.get(Math.round(time/maxTime*GAME_PLAYER_FULLNESS_LEVEL_MAX)).getKeyFrame(animationTime), getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+        batch.draw(currentAnimations.get(Math.round(time/maxTime*FULLNESS_LEVEL_MAX)).getKeyFrame(animationTime), getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
         for(int i = 0; i < attackParticleEffects.size; i++) {
             attackParticleEffects.get(i).draw(batch);
         }

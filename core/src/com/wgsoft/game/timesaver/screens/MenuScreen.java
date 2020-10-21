@@ -17,9 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.timesaver.Localizable;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class MenuScreen implements Screen, Localizable {
+    public static final float COLOR_CHANGE_DURATION = 5f;
+    public static final float BUTTON_PADDING = 50f;
+
     private final Stage backgroundStage;
     private final Stage uiStage;
 
@@ -63,7 +66,7 @@ public class MenuScreen implements Screen, Localizable {
             }
         };
         shadowActor.setColor(Color.GREEN);
-        shadowActor.addAction(Actions.forever(Actions.sequence(Actions.color(Color.PURPLE, MENU_COLOR_CHANGE_DURATION, Interpolation.fade), Actions.color(Color.GREEN, MENU_COLOR_CHANGE_DURATION, Interpolation.fade))));
+        shadowActor.addAction(Actions.forever(Actions.sequence(Actions.color(Color.PURPLE, COLOR_CHANGE_DURATION, Interpolation.fade), Actions.color(Color.GREEN, COLOR_CHANGE_DURATION, Interpolation.fade))));
         backgroundStage.addActor(shadowActor);
 
         Table rootTable = new Table(game.skin);
@@ -83,7 +86,7 @@ public class MenuScreen implements Screen, Localizable {
                 game.setScreen(game.gameScreen);
             }
         });
-        rootTable.add(startButton).pad(MENU_BUTTON_PADDING);
+        rootTable.add(startButton).pad(BUTTON_PADDING);
 
         rootTable.row();
 
@@ -94,7 +97,7 @@ public class MenuScreen implements Screen, Localizable {
                 Gdx.app.exit();
             }
         });
-        rootTable.add(exitButton).pad(MENU_BUTTON_PADDING);
+        rootTable.add(exitButton).pad(BUTTON_PADDING);
 
         uiStage.addActor(rootTable);
     }

@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.timesaver.Localizable;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class HtmlScreen implements Screen, Localizable {
     private final Stage backgroundStage;

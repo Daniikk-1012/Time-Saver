@@ -39,9 +39,30 @@ import com.wgsoft.game.timesaver.objects.game.Shop;
 import com.wgsoft.game.timesaver.objects.game.Truck;
 import com.wgsoft.game.timesaver.objects.game.Wreckage;
 
-import static com.wgsoft.game.timesaver.Const.*;
+import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class GameScreen implements Screen, Localizable {
+    public static final int BUILDING_COUNT = 4;
+    public static final int TIME_LABEL_AFTER_DOT_COUNT = 1;
+
+    public static final float BUILDINGS_PARALLAX = 0.5f;
+    public static final float VICTORY_UI_FADE_DURATION = 3f;
+    public static final float VICTORY_ALPHA_DURATION = 2f;
+    public static final float VICTORY_SHIFT_DURATION = 4f;
+    public static final float BUTTON_PADDING_HORIZONTAL = 60f;
+    public static final float BUTTON_PADDING_TOP = 50f;
+    public static final float TIME_PROGRESS_BAR_STEP = 0.005f;
+    public static final float GRAVITY = 1500f;
+    public static final float TIME_OVER_ANIMATION_DURATION = 3f;
+    public static final float TIME_FILL_SOUND_DELAY = 2f;
+
+    public static final float[] BORDERS_LEFT = new float[]{
+            -960f
+    };
+    public static final float[] BORDERS_RIGHT = new float[]{
+            9360f
+    };
+
     private final Stage backgroundStage;
     private final Stage buildingsStage;
     private final Stage gameStage;
@@ -103,7 +124,7 @@ public class GameScreen implements Screen, Localizable {
         backgroundStage.addActor(backgroundActor);
 
         float buildingsWidth = 0f;
-        for(int i = 0; i < GAME_BUILDING_COUNT; i++){
+        for(int i = 0; i < BUILDING_COUNT; i++){
             buildingsWidth += game.skin.getRegion("game/building/"+i).getRegionWidth();
         }
         final float finalBuildingsWidth = buildingsWidth;
@@ -118,7 +139,7 @@ public class GameScreen implements Screen, Localizable {
             @Override
             public void draw(Batch batch, float parentAlpha) {
                 float offset = 0f;
-                for(int i = 0; i < GAME_BUILDING_COUNT; i++){
+                for(int i = 0; i < BUILDING_COUNT; i++){
                     batch.draw(game.skin.getRegion("game/building/"+i), getX()+offset-finalBuildingsWidth, getY(), game.skin.getRegion("game/building/"+i).getRegionWidth(), game.skin.getRegion("game/building/"+i).getRegionHeight());
                     batch.draw(game.skin.getRegion("game/building/"+i), getX()+offset, getY(), game.skin.getRegion("game/building/"+i).getRegionWidth(), game.skin.getRegion("game/building/"+i).getRegionHeight());
                     offset += game.skin.getRegion("game/building/"+i).getRegionWidth();
@@ -139,9 +160,9 @@ public class GameScreen implements Screen, Localizable {
                 game.setScreen(game.menuScreen);
             }
         });
-        topTable.add(menuButton).padLeft(GAME_BUTTON_PADDING_HORIZONTAL).padTop(GAME_BUTTON_PADDING_TOP).left();
+        topTable.add(menuButton).padLeft(BUTTON_PADDING_HORIZONTAL).padTop(BUTTON_PADDING_TOP).left();
 
-        timeProgressBar = new ProgressBar(0f, 1f, GAME_TIME_PROGRESS_BAR_STEP, false, game.skin, "time"){
+        timeProgressBar = new ProgressBar(0f, 1f, TIME_PROGRESS_BAR_STEP, false, game.skin, "time"){
             @Override
             public float getPrefWidth() {
                 return getStyle().knobBefore.getMinWidth();
@@ -149,11 +170,11 @@ public class GameScreen implements Screen, Localizable {
         };
         timeProgressBar.setRound(false);
         timeProgressBar.setTouchable(Touchable.disabled);
-        topTable.add(timeProgressBar).expandX().padTop(GAME_BUTTON_PADDING_TOP);
+        topTable.add(timeProgressBar).expandX().padTop(BUTTON_PADDING_TOP);
 
         settingsButton = new TextButton("game.settings", game.skin, "boldestMedium");
         settingsButton.setVisible(false); //TODO Create settings
-        topTable.add(settingsButton).padRight(GAME_BUTTON_PADDING_HORIZONTAL).padTop(GAME_BUTTON_PADDING_TOP).right();
+        topTable.add(settingsButton).padRight(BUTTON_PADDING_HORIZONTAL).padTop(BUTTON_PADDING_TOP).right();
 
         topTable.row();
 
@@ -331,9 +352,9 @@ public class GameScreen implements Screen, Localizable {
     }
 
     public void createGame(){
-        maxTime = GAME_PLAYER_MAX_TIME_DEFAULT;
+        maxTime = Player.TIME_MAX_DEFAULT;
         player = null;
-        game.timeFillSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+        game.timeFillSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
         uiStage.getRoot().setColor(1f, 1f, 1f, 1f);
         uiStage.getRoot().setTouchable(Touchable.childrenOnly);
         victoryStage.getRoot().setColor(1f, 1f, 1f, 0f);
@@ -349,7 +370,7 @@ public class GameScreen implements Screen, Localizable {
         Ground ground = new Ground();
         gameStage.addActor(new Truck(2660f, ground.getTop()));
         gameStage.addActor(new Shop(4370f, ground.getTop()));
-        player = new Player(maxTime);
+        player = new Player(BORDERS_LEFT[0], BORDERS_RIGHT[0], maxTime);
         final Bubble bubble = new Bubble(player);
         Hatch hatch = new Hatch(8950f, ground.getTop());
         final Portal portal = new Portal(player, hatch, bubble, victoryStage, victoryStack, uiStage, blueVictoryLabel, redVictoryLabel, 8950f, ground.getTop());
@@ -358,38 +379,38 @@ public class GameScreen implements Screen, Localizable {
         gameStage.setKeyboardFocus(player);
         gameStage.addActor(player);
         gameStage.addActor(ground);
-        gameStage.addActor(new Scientist(player, bubble, 1800f, 0f, false));
-        gameStage.addActor(new Scientist(player, bubble, 2670f, 0f, false));
-        gameStage.addActor(new Scientist(player, bubble, 2960f, 0f, true));
-        gameStage.addActor(new DrugDealer(player, bubble, 3260f));
-        gameStage.addActor(new Scientist(player, bubble, 4650f, 490f, false));
-        gameStage.addActor(new Eye(player, bubble, 5250f, 500f));
-        gameStage.addActor(new Scientist(player, bubble, 5350f, 0f, false));
-        gameStage.addActor(new Eye(player, bubble, 6050f, 800f));
-        gameStage.addActor(new Eye(player, bubble, 6900f, 580f));
-        gameStage.addActor(new Scientist(player, bubble, 7000f, 0f, false));
-        gameStage.addActor(new Eye(player, bubble, 7150f, 780f));
-        gameStage.addActor(new Scientist(player, bubble, 8600f, 0f, false));
-        gameStage.addActor(new Eye(player, bubble, 8500f, 580f));
-        gameStage.addActor(new Scientist(player, bubble, 9300f, 0f, false));
-        gameStage.addActor(new Eye(player, bubble, 9200f, 800f));
+        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 1800f, 0f, false));
+        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 2670f, 0f, false));
+        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 2960f, 0f, true));
+        gameStage.addActor(new DrugDealer(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 3260f));
+        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 4650f, 490f, false));
+        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 5250f, 500f));
+        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 5350f, 0f, false));
+        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 6050f, 800f));
+        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 6900f, 580f));
+        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 7000f, 0f, false));
+        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 7150f, 780f));
+        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 8600f, 0f, false));
+        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 8500f, 580f));
+        gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 9300f, 0f, false));
+        gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[0], BORDERS_RIGHT[0], 9200f, 800f));
         gameStage.addActor(bubble);
-        gameStage.addAction(Actions.forever(Actions.delay(GAME_WRECKAGE_SPAWN_INTERVAL, Actions.run(new Runnable() {
+        gameStage.addAction(Actions.forever(Actions.delay(Wreckage.SPAWN_INTERVAL, Actions.run(new Runnable() {
             @Override
             public void run() {
                 if(player.isNotFinishing()) {
-                    gameStage.addActor(new Wreckage(player, bubble, MathUtils.random(-GAME_BORDER_LEFT, GAME_BORDER_RIGHT), gameStage.getHeight()));
+                    gameStage.addActor(new Wreckage(player, bubble, MathUtils.random(-BORDERS_LEFT[0], BORDERS_RIGHT[0]), gameStage.getHeight()));
                 }
             }
         }))));
         portal.addAction(Actions.run(new Runnable() {
             @Override
             public void run() {
-                portal.addAction(Actions.sequence(Actions.delay(MathUtils.random(GAME_PORTAL_TRASH_SPAWN_INTERVAL_MIN, GAME_PORTAL_TRASH_SPAWN_INTERVAL_MAX), Actions.run(new Runnable() {
+                portal.addAction(Actions.sequence(Actions.delay(MathUtils.random(HoverBoard.SPAWN_INTERVAL_MIN, HoverBoard.SPAWN_INTERVAL_MAX), Actions.run(new Runnable() {
                     @Override
                     public void run() {
                         if(player.isNotFinishing()){
-                            gameStage.addActor(new HoverBoard(player, bubble, portal.getX()-GAME_THROWABLE_SIZE, portal.getY()+GAME_PORTAL_TRASH_SPAWN_OFFSET_Y, false));
+                            gameStage.addActor(new HoverBoard(player, bubble, portal.getX()-HoverBoard.SIZE, portal.getY()+HoverBoard.SPAWN_OFFSET_Y, false));
                         }
                     }
                 })), Actions.run(this)));
@@ -422,14 +443,14 @@ public class GameScreen implements Screen, Localizable {
         gameStage.act(delta);
         if(player.getStage() == null || player.getTime() < 0f){
             if(player.getStage() != null) {
-                game.timeOverSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+                game.timeOverSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
             }
             timeOverStage.getRoot().clearActions();
-            timeOverStage.addAction(Actions.sequence(Actions.alpha(1f), Actions.alpha(0f, GAME_TIME_OVER_ANIMATION_DURATION, Interpolation.fade)));
-            timeOverStage.addAction(Actions.delay(GAME_TIME_FILL_SOUND_DELAY, Actions.run(new Runnable() {
+            timeOverStage.addAction(Actions.sequence(Actions.alpha(1f), Actions.alpha(0f, TIME_OVER_ANIMATION_DURATION, Interpolation.fade)));
+            timeOverStage.addAction(Actions.delay(TIME_FILL_SOUND_DELAY, Actions.run(new Runnable() {
                 @Override
                 public void run() {
-                    game.respawnSound.play(game.prefs.getFloat("settings.sound", SETTINGS_SOUND_DEFAULT));
+                    game.respawnSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
                 }
             })));
             if(player.getStage() == null){
@@ -440,15 +461,15 @@ public class GameScreen implements Screen, Localizable {
             createLevel();
             gameStage.act(delta);
         }
-        buildingsStage.getCamera().position.x = GAME_BUILDINGS_PARALLAX*gameStage.getCamera().position.x;
+        buildingsStage.getCamera().position.x = BUILDINGS_PARALLAX*gameStage.getCamera().position.x;
         buildingsStage.act(delta); //After gameStage.act because we firstly move the player, then center the camera
         timeProgressBar.setValue(player.getTime()/maxTime);
         String timeString = String.valueOf(player.getTime());
         int index = timeString.indexOf(".");
-        if(GAME_TIME_LABEL_AFTER_DOT_COUNT == 0){
+        if(TIME_LABEL_AFTER_DOT_COUNT == 0){
             timeLabel.setText(game.bundle.format("game.time", timeString.substring(0, index), player.getMaxTime()));
         }else {
-            timeLabel.setText(game.bundle.format("game.time", timeString.substring(0, index+1+GAME_TIME_LABEL_AFTER_DOT_COUNT), player.getMaxTime()));
+            timeLabel.setText(game.bundle.format("game.time", timeString.substring(0, index+1+TIME_LABEL_AFTER_DOT_COUNT), player.getMaxTime()));
         }
         uiStage.act(delta);
         foregroundStage.act(delta);
