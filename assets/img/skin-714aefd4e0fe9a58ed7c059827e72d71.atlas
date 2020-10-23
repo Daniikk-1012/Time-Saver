@@ -1,0 +1,1555 @@
+
+skin.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+check-box/inventory/off
+  rotate: false
+  xy: 1924, 1946
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+check-box/inventory/on
+  rotate: false
+  xy: 1924, 1844
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+game/background
+  rotate: false
+  xy: 2, 966
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+game/bottle
+  rotate: false
+  xy: 2026, 2030
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+game/building/1
+  rotate: false
+  xy: 2, 493
+  size: 1920, 471
+  orig: 1920, 471
+  offset: 0, 0
+  index: -1
+game/building/3
+  rotate: false
+  xy: 2, 57
+  size: 1920, 434
+  orig: 1920, 434
+  offset: 0, 0
+  index: -1
+game/drug
+  rotate: false
+  xy: 1581, 13
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+game/drug-dealer/attack
+  rotate: false
+  xy: 1615, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 1440
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 1406
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 1372
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 1338
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 1304
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 1270
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+game/drug-dealer/die
+  rotate: false
+  xy: 1924, 1086
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+game/drug-dealer/die
+  rotate: false
+  xy: 1958, 1118
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 7
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 1134
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 8
+game/drug-dealer/die
+  rotate: false
+  xy: 1924, 950
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 9
+game/drug-dealer/die
+  rotate: false
+  xy: 1924, 916
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 10
+game/drug-dealer/die
+  rotate: false
+  xy: 1924, 882
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 11
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 998
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 12
+game/drug-dealer/die
+  rotate: false
+  xy: 1958, 914
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 13
+game/drug-dealer/die
+  rotate: false
+  xy: 1924, 814
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 14
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 930
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 15
+game/drug-dealer/stay
+  rotate: false
+  xy: 1992, 114
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/drug-dealer/stay
+  rotate: false
+  xy: 1958, 64
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/drug-dealer/stay
+  rotate: false
+  xy: 1992, 46
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/drug-dealer/stay
+  rotate: false
+  xy: 1958, 30
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/eye/die
+  rotate: false
+  xy: 1958, 1390
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/eye/fly
+  rotate: false
+  xy: 1958, 1390
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+game/eye/fly
+  rotate: false
+  xy: 1958, 1390
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/eye/die
+  rotate: false
+  xy: 1958, 1356
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/eye/die
+  rotate: false
+  xy: 1958, 1322
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/eye/die
+  rotate: false
+  xy: 1958, 1288
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/eye/die
+  rotate: false
+  xy: 1958, 1254
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+game/eye/die
+  rotate: false
+  xy: 1958, 1220
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+game/eye/die
+  rotate: false
+  xy: 1992, 1236
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+game/eye/die
+  rotate: false
+  xy: 1924, 1052
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 7
+game/eye/die
+  rotate: false
+  xy: 1958, 1084
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 8
+game/eye/die
+  rotate: false
+  xy: 1992, 1100
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 9
+game/drug-dealer/die
+  rotate: false
+  xy: 1992, 1100
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 16
+game/player/die
+  rotate: false
+  xy: 1992, 1100
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 12
+game/scientist/die
+  rotate: false
+  xy: 1992, 1100
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 15
+game/eye/fly
+  rotate: false
+  xy: 1958, 404
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/eye/fly
+  rotate: false
+  xy: 1958, 404
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/eye/fly
+  rotate: false
+  xy: 1992, 454
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/hatch
+  rotate: false
+  xy: 1924, 304
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+game/platform
+  rotate: false
+  xy: 916, 6
+  size: 425, 49
+  orig: 425, 49
+  offset: 0, 0
+  index: -1
+game/player/0/attack
+  rotate: false
+  xy: 1958, 1560
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/0/attack
+  rotate: false
+  xy: 1958, 1492
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/0/attack
+  rotate: false
+  xy: 1683, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/1/attack
+  rotate: false
+  xy: 1683, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/0/down
+  rotate: false
+  xy: 1924, 780
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/1/down
+  rotate: false
+  xy: 1924, 780
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/0/run
+  rotate: false
+  xy: 1958, 370
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/0/run
+  rotate: false
+  xy: 1992, 352
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/0/run
+  rotate: false
+  xy: 1924, 134
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/1/run
+  rotate: false
+  xy: 1924, 134
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/1/attack
+  rotate: false
+  xy: 1992, 1576
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/1/attack
+  rotate: false
+  xy: 1992, 1508
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/1/run
+  rotate: false
+  xy: 1924, 236
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/1/run
+  rotate: false
+  xy: 1958, 234
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/1/stay
+  rotate: false
+  xy: 1992, 148
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/2/attack
+  rotate: false
+  xy: 1958, 1526
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/2/attack
+  rotate: false
+  xy: 1958, 1458
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/2/attack
+  rotate: false
+  xy: 1717, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/2/down
+  rotate: false
+  xy: 1958, 812
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/2/run
+  rotate: false
+  xy: 1992, 386
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/2/run
+  rotate: false
+  xy: 1924, 168
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/2/run
+  rotate: false
+  xy: 1958, 166
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/2/stay
+  rotate: false
+  xy: 1958, 98
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/3/attack
+  rotate: false
+  xy: 1924, 1460
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/3/attack
+  rotate: false
+  xy: 1924, 1392
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/3/attack
+  rotate: false
+  xy: 1992, 1474
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/3/down
+  rotate: false
+  xy: 1924, 746
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/3/run
+  rotate: false
+  xy: 1958, 336
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/3/run
+  rotate: false
+  xy: 1992, 318
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/3/run
+  rotate: false
+  xy: 1924, 100
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/3/stay
+  rotate: false
+  xy: 1992, 182
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/4/attack
+  rotate: false
+  xy: 1992, 1610
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/4/attack
+  rotate: false
+  xy: 1992, 1542
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/4/attack
+  rotate: false
+  xy: 1924, 1358
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/4/down
+  rotate: false
+  xy: 1958, 846
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/4/run
+  rotate: false
+  xy: 1992, 420
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/4/run
+  rotate: false
+  xy: 1924, 202
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/4/run
+  rotate: false
+  xy: 1958, 200
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/4/stay
+  rotate: false
+  xy: 1958, 132
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/5/attack
+  rotate: false
+  xy: 1581, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/5/attack
+  rotate: false
+  xy: 1649, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/5/attack
+  rotate: false
+  xy: 1958, 1424
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/5/down
+  rotate: false
+  xy: 1992, 896
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/5/run
+  rotate: false
+  xy: 1924, 270
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/5/run
+  rotate: false
+  xy: 1958, 268
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/5/run
+  rotate: false
+  xy: 1992, 250
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/die
+  rotate: false
+  xy: 1924, 1324
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/0/stay
+  rotate: false
+  xy: 1924, 1324
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/die
+  rotate: false
+  xy: 1924, 1290
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/die
+  rotate: false
+  xy: 1924, 1256
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/die
+  rotate: false
+  xy: 1924, 1222
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/player/die
+  rotate: false
+  xy: 1924, 1188
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+game/player/die
+  rotate: false
+  xy: 1924, 1154
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+game/player/die
+  rotate: false
+  xy: 1958, 1186
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+game/player/die
+  rotate: false
+  xy: 1992, 1202
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 7
+game/player/die
+  rotate: false
+  xy: 1924, 1018
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 8
+game/player/die
+  rotate: false
+  xy: 1958, 1050
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 9
+game/player/die
+  rotate: false
+  xy: 1992, 1066
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 10
+game/player/die
+  rotate: false
+  xy: 1992, 1032
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 11
+game/player/finish
+  rotate: false
+  xy: 1992, 862
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/5/stay
+  rotate: false
+  xy: 1992, 862
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/finish
+  rotate: false
+  xy: 1924, 712
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/player/finish
+  rotate: false
+  xy: 1958, 778
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/player/finish
+  rotate: false
+  xy: 1992, 828
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/player/finish
+  rotate: false
+  xy: 1924, 678
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+game/player/finish
+  rotate: false
+  xy: 1958, 744
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+game/player/finish
+  rotate: false
+  xy: 1992, 794
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+game/player/finish
+  rotate: false
+  xy: 1924, 644
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 7
+game/player/finish
+  rotate: false
+  xy: 1958, 710
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 8
+game/player/finish
+  rotate: false
+  xy: 1992, 760
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 9
+game/player/finish
+  rotate: false
+  xy: 1924, 610
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 10
+game/player/finish
+  rotate: false
+  xy: 1958, 676
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 11
+game/player/finish
+  rotate: false
+  xy: 1992, 726
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 12
+game/player/finish
+  rotate: false
+  xy: 1924, 576
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 13
+game/player/finish
+  rotate: false
+  xy: 1958, 642
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 14
+game/player/finish
+  rotate: false
+  xy: 1992, 692
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 15
+game/player/finish
+  rotate: false
+  xy: 1924, 542
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 16
+game/player/finish
+  rotate: false
+  xy: 1958, 608
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 17
+game/player/finish
+  rotate: false
+  xy: 1992, 658
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 18
+game/player/finish
+  rotate: false
+  xy: 1924, 508
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 19
+game/player/finish
+  rotate: false
+  xy: 1958, 574
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 20
+game/player/finish
+  rotate: false
+  xy: 1992, 624
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 21
+game/player/finish
+  rotate: false
+  xy: 1924, 474
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 22
+game/player/finish
+  rotate: false
+  xy: 1958, 540
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 23
+game/player/finish
+  rotate: false
+  xy: 1992, 590
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 24
+game/player/finish
+  rotate: false
+  xy: 1924, 440
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 25
+game/player/finish
+  rotate: false
+  xy: 1958, 506
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 26
+game/player/finish
+  rotate: false
+  xy: 1992, 556
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 27
+game/player/finish
+  rotate: false
+  xy: 1924, 406
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 28
+game/player/finish
+  rotate: false
+  xy: 1958, 472
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 29
+game/player/finish
+  rotate: false
+  xy: 1992, 522
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 30
+game/player/finish
+  rotate: false
+  xy: 1924, 372
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 31
+game/player/finish
+  rotate: false
+  xy: 1958, 438
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 32
+game/player/finish
+  rotate: false
+  xy: 1992, 488
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 33
+game/player/finish
+  rotate: false
+  xy: 1924, 338
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 34
+game/portal/shrink
+  rotate: false
+  xy: 1343, 7
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 0
+game/portal/stay
+  rotate: false
+  xy: 1343, 7
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 0
+game/portal/shrink
+  rotate: false
+  xy: 1924, 1794
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 1
+game/portal/shrink
+  rotate: false
+  xy: 1377, 7
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 2
+game/portal/shrink
+  rotate: false
+  xy: 1924, 1744
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 3
+game/portal/shrink
+  rotate: false
+  xy: 1958, 1794
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 4
+game/portal/shrink
+  rotate: false
+  xy: 1411, 7
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 5
+game/portal/shrink
+  rotate: false
+  xy: 1924, 1694
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 6
+game/portal/shrink
+  rotate: false
+  xy: 1958, 1744
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 7
+game/portal/shrink
+  rotate: false
+  xy: 1992, 1794
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 8
+game/portal/shrink
+  rotate: false
+  xy: 1445, 7
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 9
+game/portal/shrink
+  rotate: false
+  xy: 1924, 1644
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 10
+game/portal/shrink
+  rotate: false
+  xy: 1958, 1694
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 11
+game/portal/shrink
+  rotate: false
+  xy: 1992, 1744
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 12
+game/portal/shrink
+  rotate: false
+  xy: 1479, 7
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 13
+game/portal/shrink
+  rotate: false
+  xy: 1924, 1594
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 14
+game/portal/shrink
+  rotate: false
+  xy: 1958, 1644
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 15
+game/portal/shrink
+  rotate: false
+  xy: 1992, 1694
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 16
+game/portal/shrink
+  rotate: false
+  xy: 1513, 7
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 17
+game/portal/shrink
+  rotate: false
+  xy: 1924, 1544
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 18
+game/portal/shrink
+  rotate: false
+  xy: 1958, 1594
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 19
+game/portal/shrink
+  rotate: false
+  xy: 1992, 1644
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 20
+game/portal/shrink
+  rotate: false
+  xy: 1547, 7
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 21
+game/portal/shrink
+  rotate: false
+  xy: 1924, 1494
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: 22
+game/scientist/attack
+  rotate: false
+  xy: 1924, 1426
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/scientist/die
+  rotate: false
+  xy: 1751, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/scientist/stay
+  rotate: false
+  xy: 1751, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/scientist/die
+  rotate: false
+  xy: 1785, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/scientist/die
+  rotate: false
+  xy: 1819, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/scientist/die
+  rotate: false
+  xy: 1853, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/scientist/die
+  rotate: false
+  xy: 1887, 23
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+game/scientist/die
+  rotate: false
+  xy: 1924, 1120
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+game/scientist/die
+  rotate: false
+  xy: 1958, 1152
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+game/scientist/die
+  rotate: false
+  xy: 1992, 1168
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 7
+game/scientist/die
+  rotate: false
+  xy: 1924, 984
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 8
+game/scientist/die
+  rotate: false
+  xy: 1958, 1016
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 9
+game/scientist/die
+  rotate: false
+  xy: 1958, 982
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 10
+game/scientist/die
+  rotate: false
+  xy: 1958, 948
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 11
+game/scientist/die
+  rotate: false
+  xy: 1924, 848
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 12
+game/scientist/die
+  rotate: false
+  xy: 1992, 964
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 13
+game/scientist/die
+  rotate: false
+  xy: 1958, 880
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 14
+game/scientist/run
+  rotate: false
+  xy: 1958, 302
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/scientist/run
+  rotate: false
+  xy: 1992, 284
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/scientist/run
+  rotate: false
+  xy: 1992, 216
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/scientist/run
+  rotate: false
+  xy: 1924, 66
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/scientist/stay
+  rotate: false
+  xy: 1992, 80
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+game/scientist/stay
+  rotate: false
+  xy: 1924, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+game/scientist/stay
+  rotate: false
+  xy: 1992, 12
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+game/time-mine
+  rotate: false
+  xy: 2026, 2020
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+game/time-over
+  rotate: false
+  xy: 1921, 54
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 2, 2
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+progress-bar/time/knob-before
+  rotate: false
+  xy: 2, 5
+  size: 912, 50
+  orig: 912, 50
+  offset: 0, 0
+  index: -1
+
+skin2.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+check-box/inventory/icon/hourglass
+  rotate: false
+  xy: 1864, 360
+  size: 144, 167
+  orig: 144, 167
+  offset: 0, 0
+  index: -1
+check-box/inventory/icon/katana
+  rotate: false
+  xy: 1864, 191
+  size: 144, 167
+  orig: 144, 167
+  offset: 0, 0
+  index: -1
+game/building/0
+  rotate: false
+  xy: 2, 529
+  size: 1920, 429
+  orig: 1920, 429
+  offset: 0, 0
+  index: -1
+game/ground
+  rotate: false
+  xy: 2, 2
+  size: 1920, 65
+  orig: 1920, 65
+  offset: 0, 0
+  index: -1
+game/player/0/up
+  rotate: false
+  xy: 1924, 2008
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/1/up
+  rotate: false
+  xy: 1924, 2008
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/2/up
+  rotate: false
+  xy: 1924, 1872
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/3/up
+  rotate: false
+  xy: 1924, 1906
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/4/up
+  rotate: false
+  xy: 1924, 1974
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/player/5/up
+  rotate: false
+  xy: 1924, 1940
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+game/shop
+  rotate: false
+  xy: 875, 87
+  size: 987, 440
+  orig: 987, 440
+  offset: 0, 0
+  index: -1
+game/truck
+  rotate: false
+  xy: 2, 69
+  size: 871, 458
+  orig: 871, 458
+  offset: 0, 0
+  index: -1
+menu/background
+  rotate: false
+  xy: 2, 960
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+
+skin3.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+check-box/inventory/icon/time-mine
+  rotate: false
+  xy: 615, 29
+  size: 144, 167
+  orig: 144, 167
+  offset: 0, 0
+  index: -1
+game/building/2
+  rotate: false
+  xy: 2, 457
+  size: 1920, 414
+  orig: 1920, 414
+  offset: 0, 0
+  index: -1
+game/foreground
+  rotate: false
+  xy: 2, 873
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+game/victory-background
+  rotate: false
+  xy: 2, 285
+  size: 1920, 170
+  orig: 1920, 170
+  offset: 0, 0
+  index: -1
+html/shadow
+  rotate: false
+  xy: 2, 2
+  size: 611, 281
+  orig: 611, 281
+  offset: 0, 0
+  index: -1
+menu/title
+  rotate: false
+  xy: 615, 198
+  size: 641, 85
+  orig: 641, 85
+  offset: 0, 0
+  index: -1
+
+skin4.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+menu/shadow
+  rotate: false
+  xy: 2, 2
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+
+skin5.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+html/background
+  rotate: false
+  xy: 2, 2
+  size: 1500, 1080
+  orig: 1500, 1080
+  offset: 0, 0
+  index: -1
+
+skin6.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+game/bubble
+  rotate: false
+  xy: 2, 2
+  size: 1227, 1227
+  orig: 1227, 1227
+  offset: 0, 0
+  index: -1
