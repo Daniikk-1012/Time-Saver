@@ -88,8 +88,6 @@ public class GameScreen implements Screen, Localizable {
     private Bubble bubble;
     private Portal portal;
     private Hatch hatch;
-    private Label scientistLabel;
-    private Label drugDealerLabel;
 
     private final TextButton menuButton;
     private final ProgressBar timeProgressBar;
@@ -370,11 +368,11 @@ public class GameScreen implements Screen, Localizable {
                 gameStage.addActor(portal);
                 hatch = new Hatch(8950f, Ground.HEIGHT);
                 gameStage.addActor(hatch);
-                scientistLabel = new Label(game.bundle.get("game.scientist"), game.skin, "gameLabel");
+                Label scientistLabel = new Label(game.bundle.get("game.scientist"), game.skin, "gameLabel");
                 scientistLabel.setAlignment(Align.center);
                 scientistLabel.setPosition(1100f, 100f);
                 gameStage.addActor(scientistLabel);
-                drugDealerLabel = new Label(game.bundle.get("game.drug-dealer"), game.skin, "gameLabel");
+                Label drugDealerLabel = new Label(game.bundle.get("game.drug-dealer"), game.skin, "gameLabel");
                 drugDealerLabel.setPosition(3450f, 100f);
                 drugDealerLabel.setAlignment(Align.center);
                 gameStage.addActor(drugDealerLabel);
