@@ -81,14 +81,16 @@ public class GameScreen implements Screen, Localizable {
 
     private final InputMultiplexer inputMultiplexer;
 
+    private boolean finishing;
+    private int level;
+    private float maxTime;
     private Player player;
     private Bubble bubble;
     private Portal portal;
     private Hatch hatch;
-    private float maxTime;
+    private Label scientistLabel;
+    private Label drugDealerLabel;
 
-    private boolean finishing;
-    private int level;
     private final TextButton menuButton;
     private final ProgressBar timeProgressBar;
     private final TextButton settingsButton;
@@ -368,24 +370,32 @@ public class GameScreen implements Screen, Localizable {
                 gameStage.addActor(portal);
                 hatch = new Hatch(8950f, Ground.HEIGHT);
                 gameStage.addActor(hatch);
+                scientistLabel = new Label(game.bundle.get("game.scientist"), game.skin, "gameLabel");
+                scientistLabel.setAlignment(Align.center);
+                scientistLabel.setPosition(1100f, 100f);
+                gameStage.addActor(scientistLabel);
+                drugDealerLabel = new Label(game.bundle.get("game.drug-dealer"), game.skin, "gameLabel");
+                drugDealerLabel.setPosition(3450f, 100f);
+                drugDealerLabel.setAlignment(Align.center);
+                gameStage.addActor(drugDealerLabel);
                 gameStage.setKeyboardFocus(player);
                 gameStage.addActor(player);
                 gameStage.addActor(new Ground());
                 bubble = new Bubble(player);
-                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 1800f, 0f, false));
-                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2670f, 0f, false));
-                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2960f, 0f, true));
-                gameStage.addActor(new DrugDealer(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 3260f));
-                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 4650f, 490f, false));
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 1800f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2670f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2960f, 0f, true));
+                gameStage.addActor(new DrugDealer(player, bubble, drugDealerLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 3260f));
+                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 4650f, 490f, false));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 5250f, 500f));
-                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 5350f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 5350f, 0f, false));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 6050f, 800f));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 6900f, 580f));
-                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 7000f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 7000f, 0f, false));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 7150f, 780f));
-                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8600f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8600f, 0f, false));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8500f, 580f));
-                gameStage.addActor(new Scientist(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9300f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9300f, 0f, false));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9200f, 800f));
                 for (Lamp lamp : lamps) {
                     gameStage.addActor(new Light(lamp));

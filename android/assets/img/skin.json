@@ -14,6 +14,11 @@
     }
   }
   BitmapFont : {
+    boldestSmall : {
+      file : fnt/boldest.fnt
+      scaledSize : 25
+      markupEnabled : true
+    }
     boldestMedium : {
       file : fnt/boldest.fnt
       scaledSize : 45
@@ -33,6 +38,10 @@
     boldestLarge : {
       font : boldestLarge
       fontColor : font
+    }
+    gameLabel : {
+      font : boldestSmall
+      background : game/text-background
     }
   }
   TextButtonStyle : {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.wgsoft.game.timesaver.screens.GameScreen;
 
@@ -24,6 +25,7 @@ public class Scientist extends Actor implements Monster {
 
     private final Player player;
     private final Bubble bubble;
+    private final Label label;
     private final float borderLeft;
     private final float borderRight;
     private final Animation<TextureRegion> stayAnimation;
@@ -37,9 +39,10 @@ public class Scientist extends Actor implements Monster {
     private final ParticleEffectPool.PooledEffect bloodParticleEffect;
 
     //x is for left side
-    public Scientist(Player player, Bubble bubble, float borderLeft, float borderRight, float x, float y, boolean right){
+    public Scientist(Player player, Bubble bubble, Label label, float borderLeft, float borderRight, float x, float y, boolean right){
         this.player = player;
         this.bubble = bubble;
+        this.label = label;
         this.borderLeft = borderLeft;
         this.borderRight = borderRight;
         setBounds(x, y, SIZE*WIDTH_SCALE, SIZE*HEIGHT_SCALE);
@@ -82,6 +85,9 @@ public class Scientist extends Actor implements Monster {
         game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
         bloodParticleEffect.allowCompletion();
         player.addMaxTime(DEATH_MAX_TIME_BONUS);
+        if(label != null){
+            label.remove();
+        }
     }
 
     public float getVelocity(){
