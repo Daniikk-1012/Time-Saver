@@ -12,6 +12,15 @@
     menuFont : {
       hex : #00ffd9
     }
+    black : {
+      hex : #000000
+    }
+  }
+  TintedDrawable : {
+    black : {
+      name : pixel
+      color : black
+    }
   }
   BitmapFont : {
     boldestSmall : {

@@ -294,7 +294,7 @@ public class GameScreen implements Screen, Localizable {
 
         Table timeOverTable = new Table(game.skin);
         timeOverTable.setFillParent(true);
-        timeOverTable.setBackground("game/time-over");
+        timeOverTable.setBackground("black");
 
         timeOverLabel = new Label("game.time-over", game.skin, "boldestLarge");
         timeOverTable.add(timeOverLabel);
