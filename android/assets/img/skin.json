@@ -1,10 +1,10 @@
 {
   Color : {
     font : {
-      hex : #EEEEEE
+      hex : #eeeeee
     }
     over : {
-      hex: #234C90
+      hex: #234c90
     }
     down : {
       hex : #103167
