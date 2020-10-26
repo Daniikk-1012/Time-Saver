@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -63,6 +64,10 @@ public class GameScreen implements Screen, Localizable {
     public static final float TIME_FILL_SOUND_DELAY = 2f;
     public static final float BUILDING_WIDTH = 1920f;
     public static final float BUILDING_HEIGHT = 471f;
+    public static final float BAR_HEIGHT = 170f;
+    public static final float CUT_SCENE_ZOOM = 0.87f;
+    public static final float CUT_SCENE_END_DURATION = 3f;
+    public static final float WRECKAGE_SAFE_ZONE = 960f;
 
     public static final float[] BORDERS_LEFT = new float[]{
             -960f
@@ -78,6 +83,7 @@ public class GameScreen implements Screen, Localizable {
     private final Stage foregroundStage;
     private final Stage timeOverStage;
     private final Stage victoryStage;
+    private final Stage barStage;
 
     private final InputMultiplexer inputMultiplexer;
 
@@ -88,6 +94,7 @@ public class GameScreen implements Screen, Localizable {
     private Bubble bubble;
     private Portal portal;
     private Hatch hatch;
+    private Scientist scientist;
 
     private final TextButton menuButton;
     private final ProgressBar timeProgressBar;
@@ -104,6 +111,10 @@ public class GameScreen implements Screen, Localizable {
     private final Stack victoryStack;
     private final TextButton victoryMenuButton;
 
+    private final Table barTable;
+    private final Image topBarImage;
+    private final Image bottomBarImage;
+
     public GameScreen(){
         backgroundStage = new Stage(new ScreenViewport(), game.batch);
         backgroundStage.getRoot().setTouchable(Touchable.disabled);
@@ -118,8 +129,10 @@ public class GameScreen implements Screen, Localizable {
         timeOverStage.getRoot().setColor(1f, 1f, 1f, 0f);
         timeOverStage.getRoot().setTouchable(Touchable.disabled);
         victoryStage = new Stage(new ScreenViewport(), game.batch);
+        barStage = new Stage(new ScreenViewport(), game.batch);
+        barStage.getRoot().setTouchable(Touchable.disabled);
 
-        inputMultiplexer = new InputMultiplexer(victoryStage, timeOverStage, foregroundStage, uiStage, gameStage, buildingsStage, backgroundStage);
+        inputMultiplexer = new InputMultiplexer(barStage, victoryStage, timeOverStage, foregroundStage, uiStage, gameStage, buildingsStage, backgroundStage);
 
         Actor backgroundActor = new Actor(){
             @Override
@@ -329,6 +342,21 @@ public class GameScreen implements Screen, Localizable {
         victoryTable.add(victoryMenuButton);
 
         victoryStage.addActor(victoryTable);
+
+        barTable = new Table(game.skin);
+        barTable.setFillParent(true);
+
+        topBarImage = new Image(game.skin, "black");
+        barTable.add(topBarImage).growX().height(BAR_HEIGHT);
+
+        barTable.row();
+        barTable.add().grow();
+        barTable.row();
+
+        bottomBarImage = new Image(game.skin, "black");
+        barTable.add(bottomBarImage).growX().height(BAR_HEIGHT);
+
+        barStage.addActor(barTable);
     }
 
     public void createGame(int level){
@@ -340,6 +368,81 @@ public class GameScreen implements Screen, Localizable {
         uiStage.getRoot().setTouchable(Touchable.childrenOnly);
         victoryStage.getRoot().setColor(1f, 1f, 1f, 0f);
         victoryStage.getRoot().setTouchable(Touchable.disabled);
+        createLevel();
+        if(level == 0){
+            barStage.getRoot().setColor(1f, 1f, 1f, 1f);
+            ((OrthographicCamera)gameStage.getCamera()).zoom = CUT_SCENE_ZOOM;
+            barTable.invalidate();
+            barTable.validate();
+            Gdx.input.setInputProcessor(null);
+            uiStage.getRoot().setColor(1f, 1f, 1f, 0f);
+            final Action animateAction = new Action() {
+                @Override
+                public boolean act(float delta) {
+                    return scientist.isDying();
+                }
+            };
+            gameStage.addAction(Actions.sequence(animateAction, Actions.parallel(new Action() {
+                boolean firstRun = true;
+                Action action;
+
+                @Override
+                public boolean act(float delta) {
+                    if (firstRun) {
+                        action = Actions.moveBy(0f, topBarImage.getHeight(), CUT_SCENE_END_DURATION, Interpolation.fade);
+                        topBarImage.addAction(action);
+                        firstRun = false;
+                    }
+                    return action.getActor() == null;
+                }
+            }, new Action() {
+                boolean firstRun = true;
+                Action action;
+
+                @Override
+                public boolean act(float delta) {
+                    if (firstRun) {
+                        action = Actions.moveBy(0f, -bottomBarImage.getHeight(), CUT_SCENE_END_DURATION, Interpolation.fade);
+                        bottomBarImage.addAction(action);
+                        firstRun = false;
+                    }
+                    return action.getActor() == null;
+                }
+            }, new Action() {
+                boolean firstRun = true;
+                Action action;
+
+                @Override
+                public boolean act(float delta) {
+                    if (firstRun) {
+                        action = Actions.alpha(1f, CUT_SCENE_END_DURATION, Interpolation.fade);
+                        uiStage.addAction(action);
+                        firstRun = false;
+                    }
+                    return action.getActor() == null;
+                }
+            }, new TemporalAction(CUT_SCENE_END_DURATION, Interpolation.fade) {
+                @Override
+                protected void update(float percent) {
+                    ((OrthographicCamera) gameStage.getCamera()).zoom = getInterpolation().apply(CUT_SCENE_ZOOM, 1f, percent);
+                    gameStage.getCamera().position.y = getInterpolation().apply(gameStage.getHeight() / 2f - BAR_HEIGHT / CUT_SCENE_ZOOM, gameStage.getHeight() / 2f, percent);
+                }
+            }), Actions.addAction(Actions.alpha(0f), barStage.getRoot()), Actions.run(new Runnable() {
+                @Override
+                public void run() {
+                    Gdx.input.setInputProcessor(inputMultiplexer);
+                }
+            })));
+            gameStage.addAction(new Action() {
+                @Override
+                public boolean act(float delta) {
+                    gameStage.getCamera().position.y = gameStage.getHeight()/2f-BAR_HEIGHT/CUT_SCENE_ZOOM;
+                    return animateAction.act(0f);
+                }
+            });
+        }else{
+            barStage.getRoot().setColor(1f, 1f, 1f, 0f);
+        }
     }
 
     public void createLevel(){
@@ -370,7 +473,7 @@ public class GameScreen implements Screen, Localizable {
                 gameStage.addActor(hatch);
                 Label scientistLabel = new Label(game.bundle.get("game.scientist"), game.skin, "gameLabel");
                 scientistLabel.setAlignment(Align.center);
-                scientistLabel.setPosition(1100f, 100f);
+                scientistLabel.setPosition(50f, 100f);
                 gameStage.addActor(scientistLabel);
                 Label drugDealerLabel = new Label(game.bundle.get("game.drug-dealer"), game.skin, "gameLabel");
                 drugDealerLabel.setPosition(3450f, 100f);
@@ -380,20 +483,22 @@ public class GameScreen implements Screen, Localizable {
                 gameStage.addActor(player);
                 gameStage.addActor(new Ground());
                 bubble = new Bubble(player);
-                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 1800f, 0f, false));
-                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2670f, 0f, false));
-                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2960f, 0f, true));
+                scientist = new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[0], BORDERS_RIGHT[0], 650f, 0f, false, false);
+                gameStage.addActor(scientist);
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 1800f, 0f, false, true));
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2670f, 0f, false, true));
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 2960f, 0f, true, true));
                 gameStage.addActor(new DrugDealer(player, bubble, drugDealerLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 3260f));
-                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 4650f, 490f, false));
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 4650f, 490f, false, true));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 5250f, 500f));
-                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 5350f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 5350f, 0f, false, true));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 6050f, 800f));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 6900f, 580f));
-                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 7000f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 7000f, 0f, false, true));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 7150f, 780f));
-                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8600f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8600f, 0f, false, true));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 8500f, 580f));
-                gameStage.addActor(new Scientist(player, bubble, null, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9300f, 0f, false));
+                gameStage.addActor(new Scientist(player, bubble, scientistLabel, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9300f, 0f, false, true));
                 gameStage.addActor(new Eye(player, bubble, BORDERS_LEFT[level], BORDERS_RIGHT[level], 9200f, 800f));
                 for (Lamp lamp : lamps) {
                     gameStage.addActor(new Light(lamp));
@@ -403,7 +508,7 @@ public class GameScreen implements Screen, Localizable {
                     @Override
                     public void run() {
                         if (!finishing) {
-                            gameStage.addActor(new Wreckage(player, bubble, MathUtils.random(-BORDERS_LEFT[level], BORDERS_RIGHT[level]), gameStage.getHeight()));
+                            gameStage.addActor(new Wreckage(player, bubble, MathUtils.random(-BORDERS_LEFT[level]+WRECKAGE_SAFE_ZONE, BORDERS_RIGHT[level]), gameStage.getHeight(), true));
                         }
                     }
                 }))));
@@ -420,6 +525,7 @@ public class GameScreen implements Screen, Localizable {
                         })), Actions.run(this)));
                     }
                 }));
+                gameStage.addActor(new Wreckage(player, bubble, scientist.getX(Align.center), gameStage.getHeight(), false));
                 break;
         }
         katanaCheckBox.setChecked(true);
@@ -552,6 +658,7 @@ public class GameScreen implements Screen, Localizable {
         foregroundStage.act(delta);
         timeOverStage.act(delta);
         victoryStage.act(delta);
+        barStage.act(delta);
         game.batch.setColor(1f, 1f, 1f, 1f); //Because alpha does not restore color of SpriteBatch
         backgroundStage.draw();
         buildingsStage.draw();
@@ -560,6 +667,7 @@ public class GameScreen implements Screen, Localizable {
         foregroundStage.draw();
         timeOverStage.draw();
         victoryStage.draw();
+        barStage.draw();
     }
 
     @Override
@@ -572,6 +680,7 @@ public class GameScreen implements Screen, Localizable {
             ((ScreenViewport) foregroundStage.getViewport()).setUnitsPerPixel(SCREEN_HEIGHT/height);
             ((ScreenViewport) timeOverStage.getViewport()).setUnitsPerPixel(SCREEN_HEIGHT/height);
             ((ScreenViewport) victoryStage.getViewport()).setUnitsPerPixel(SCREEN_HEIGHT/height);
+            ((ScreenViewport) barStage.getViewport()).setUnitsPerPixel(SCREEN_HEIGHT/height);
         }else{
             ((ScreenViewport) backgroundStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
             ((ScreenViewport) buildingsStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
@@ -580,6 +689,7 @@ public class GameScreen implements Screen, Localizable {
             ((ScreenViewport) foregroundStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
             ((ScreenViewport) timeOverStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
             ((ScreenViewport) victoryStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
+            ((ScreenViewport) barStage.getViewport()).setUnitsPerPixel(SCREEN_WIDTH/width);
         }
         backgroundStage.getViewport().update(width, height, true);
         buildingsStage.getViewport().update(width, height);
@@ -590,6 +700,7 @@ public class GameScreen implements Screen, Localizable {
         foregroundStage.getViewport().update(width, height, true);
         timeOverStage.getViewport().update(width, height, true);
         victoryStage.getViewport().update(width, height, true);
+        barStage.getViewport().update(width, height, true);
     }
 
     @Override

@@ -37,9 +37,10 @@ public class Scientist extends Actor implements Monster {
     private float velocity;
     private float attackTime;
     private final ParticleEffectPool.PooledEffect bloodParticleEffect;
+    private final boolean active;
 
     //x is for left side
-    public Scientist(Player player, Bubble bubble, Label label, float borderLeft, float borderRight, float x, float y, boolean right){
+    public Scientist(Player player, Bubble bubble, Label label, float borderLeft, float borderRight, float x, float y, boolean right, boolean active){
         this.player = player;
         this.bubble = bubble;
         this.label = label;
@@ -59,6 +60,7 @@ public class Scientist extends Actor implements Monster {
         setAnimation(stayAnimation);
         bloodParticleEffect = game.bloodParticleEffectPool.obtain();
         bloodParticleEffect.start();
+        this.active = active;
     }
 
     private float sqr(float x){
@@ -84,7 +86,9 @@ public class Scientist extends Actor implements Monster {
         setAnimation(dieAnimation);
         game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
         bloodParticleEffect.allowCompletion();
-        player.addMaxTime(DEATH_MAX_TIME_BONUS);
+        if(active) {
+            player.addMaxTime(DEATH_MAX_TIME_BONUS);
+        }
         if(label != null){
             label.remove();
         }
@@ -116,52 +120,64 @@ public class Scientist extends Actor implements Monster {
             animationTime += delta*Bubble.OUTSIDE_SPEED_SCALE;
         }
         if(currentAnimation != dieAnimation) {
-            if(player.getX(Align.center) < getX(Align.center) && getX(Align.center)-player.getRight() < Monster.VISIBLE_RADIUS){
-                if(inBubble) {
-                    attackTime += delta;
-                }else{
-                    attackTime += delta*Bubble.OUTSIDE_SPEED_SCALE;
-                }
-                while(attackTime >= ATTACK_INTERVAL){
-                    getStage().addActor(new Bottle(player, bubble, getX()-Bottle.SIZE, getY(Align.center)-Bottle.SIZE/2f, false));
-                    if(currentAnimation != attackAnimation) {
-                        setAnimation(attackAnimation);
+            if(active) {
+                if (player.getX(Align.center) < getX(Align.center) && getX(Align.center) - player.getRight() < Monster.VISIBLE_RADIUS) {
+                    if (inBubble) {
+                        attackTime += delta;
+                    } else {
+                        attackTime += delta * Bubble.OUTSIDE_SPEED_SCALE;
                     }
-                    attackTime -= ATTACK_INTERVAL;
-                }
-                if(inBubble) {
-                    moveBy(-delta * SPEED, 0f);
-                }else{
-                    moveBy(-delta * SPEED * Bubble.OUTSIDE_SPEED_SCALE, 0f);
-                }
-                if((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != runAnimation){
-                    setAnimation(runAnimation);
-                }
-                setScaleX(-1f/WIDTH_SCALE);
-            }else if(player.getX(Align.center) > getX(Align.center) && player.getX()-getX(Align.center) < Monster.VISIBLE_RADIUS){
-                if(inBubble) {
-                    attackTime += delta;
-                }else{
-                    attackTime += delta*Bubble.OUTSIDE_SPEED_SCALE;
-                }
-                while(attackTime >= ATTACK_INTERVAL){
-                    getStage().addActor(new Bottle(player, bubble, getRight(), getY(Align.center)-Bottle.SIZE/2f, true));
-                    if(currentAnimation != attackAnimation) {
-                        setAnimation(attackAnimation);
+                    while (attackTime >= ATTACK_INTERVAL) {
+                        getStage().addActor(new Bottle(player, bubble, getX() - Bottle.SIZE, getY(Align.center) - Bottle.SIZE / 2f, false));
+                        if (currentAnimation != attackAnimation) {
+                            setAnimation(attackAnimation);
+                        }
+                        attackTime -= ATTACK_INTERVAL;
                     }
-                    attackTime -= ATTACK_INTERVAL;
+                    if (inBubble) {
+                        moveBy(-delta * SPEED, 0f);
+                    } else {
+                        moveBy(-delta * SPEED * Bubble.OUTSIDE_SPEED_SCALE, 0f);
+                    }
+                    if ((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != runAnimation) {
+                        setAnimation(runAnimation);
+                    }
+                    setScaleX(-1f / WIDTH_SCALE);
+                } else if (player.getX(Align.center) > getX(Align.center) && player.getX() - getX(Align.center) < Monster.VISIBLE_RADIUS) {
+                    if (inBubble) {
+                        attackTime += delta;
+                    } else {
+                        attackTime += delta * Bubble.OUTSIDE_SPEED_SCALE;
+                    }
+                    while (attackTime >= ATTACK_INTERVAL) {
+                        getStage().addActor(new Bottle(player, bubble, getRight(), getY(Align.center) - Bottle.SIZE / 2f, true));
+                        if (currentAnimation != attackAnimation) {
+                            setAnimation(attackAnimation);
+                        }
+                        attackTime -= ATTACK_INTERVAL;
+                    }
+                    if (inBubble) {
+                        moveBy(delta * SPEED, 0f);
+                    } else {
+                        moveBy(delta * SPEED * Bubble.OUTSIDE_SPEED_SCALE, 0f);
+                    }
+                    if ((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != runAnimation) {
+                        setAnimation(runAnimation);
+                    }
+                    setScaleX(1f / WIDTH_SCALE);
+                }else if((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != stayAnimation){
+                    setAnimation(stayAnimation);
                 }
-                if(inBubble) {
-                    moveBy(delta * SPEED, 0f);
-                }else{
-                    moveBy(delta * SPEED * Bubble.OUTSIDE_SPEED_SCALE, 0f);
+            }else{
+                for(int i = 0; i < getStage().getActors().size; i++){
+                    Actor actor = getStage().getActors().get(i);
+                    if(actor instanceof Wreckage) {
+                        if(actor.getX() < getRight() && actor.getRight() > getX() && actor.getY() < getTop() && actor.getTop() > getY()){
+                            die();
+                            actor.remove();
+                        }
+                    }
                 }
-                if((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != runAnimation){
-                    setAnimation(runAnimation);
-                }
-                setScaleX(1f/WIDTH_SCALE);
-            }else if((currentAnimation != attackAnimation || currentAnimation.isAnimationFinished(animationTime)) && currentAnimation != stayAnimation){
-                setAnimation(stayAnimation);
             }
             if (getX() < borderLeft && getRight() > borderRight) {
                 setX((borderLeft + borderRight) / 2f, Align.center);
@@ -189,6 +205,10 @@ public class Scientist extends Actor implements Monster {
         super.act(delta);
         bloodParticleEffect.setPosition(getX(Align.center), getY(Align.center));
         bloodParticleEffect.update(delta);
+    }
+
+    public boolean isDying(){
+        return currentAnimation == dieAnimation;
     }
 
     @Override

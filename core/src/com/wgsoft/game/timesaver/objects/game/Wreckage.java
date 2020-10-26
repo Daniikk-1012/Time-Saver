@@ -17,14 +17,17 @@ public class Wreckage extends Actor {
     private final Bubble bubble;
     private final float rotationSpeed;
     private float velocity;
+    private final boolean active;
 
-    public Wreckage(Player player, Bubble bubble, float x, float y){
+    //Position is for bottom center point of actor
+    public Wreckage(Player player, Bubble bubble, float x, float y, boolean active){
         this.player = player;
         this.bubble = bubble;
         setSize(SIZE, SIZE);
         setPosition(x, y, Align.center|Align.bottom);
         setOrigin(Align.center);
         rotationSpeed = MathUtils.random(-ROTATION_SPEED_AMPLITUDE, ROTATION_SPEED_AMPLITUDE);
+        this.active = active;
     }
 
     private float sqr(float x){
@@ -33,32 +36,34 @@ public class Wreckage extends Actor {
 
     @Override
     public void act(float delta) {
-        boolean inBubble = sqr(getX(Align.center)-bubble.getX(Align.center))+sqr(getY(Align.center)-bubble.getY(Align.center)) < sqr(bubble.getWidth()/2f);
-        if(inBubble){
-            velocity -= delta* GameScreen.GRAVITY;
-            moveBy(0f, delta * velocity);
-            rotateBy(delta * rotationSpeed);
-        }else{
-            velocity -= delta*GameScreen.GRAVITY*Bubble.OUTSIDE_SPEED_SCALE;
-            moveBy(0f, delta * velocity * Bubble.OUTSIDE_SPEED_SCALE);
-            rotateBy(delta * rotationSpeed * Bubble.OUTSIDE_SPEED_SCALE);
-        }
-        for(int i = 0; i < getStage().getActors().size; i++){
-            if(getStage().getActors().get(i) instanceof Solid){
-                ((Solid) getStage().getActors().get(i)).overlap(this);
-                if(getStage() == null){
-                    return;
+        if(getStage() != null) {
+            boolean inBubble = sqr(getX(Align.center) - bubble.getX(Align.center)) + sqr(getY(Align.center) - bubble.getY(Align.center)) < sqr(bubble.getWidth() / 2f);
+            if (inBubble) {
+                velocity -= delta * GameScreen.GRAVITY;
+                moveBy(0f, delta * velocity);
+                rotateBy(delta * rotationSpeed);
+            } else {
+                velocity -= delta * GameScreen.GRAVITY * Bubble.OUTSIDE_SPEED_SCALE;
+                moveBy(0f, delta * velocity * Bubble.OUTSIDE_SPEED_SCALE);
+                rotateBy(delta * rotationSpeed * Bubble.OUTSIDE_SPEED_SCALE);
+            }
+            for (int i = 0; i < getStage().getActors().size; i++) {
+                if (getStage().getActors().get(i) instanceof Solid) {
+                    ((Solid) getStage().getActors().get(i)).overlap(this);
+                    if (getStage() == null) {
+                        return;
+                    }
                 }
             }
-        }
-        if(game.gameScreen.isNotFinishing() && player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()){
-            if(player.isNotAttacking()) {
-                player.die();
+            if (active && game.gameScreen.isNotFinishing() && player.isNotDying() && player.getX() < getRight() && player.getRight() > getX() && player.getY() < getTop() && player.getTop() > getY()) {
+                if (player.isNotAttacking()) {
+                    player.die();
+                }
+                remove();
+                return;
             }
-            remove();
-            return;
+            super.act(delta);
         }
-        super.act(delta);
     }
 
     @Override
