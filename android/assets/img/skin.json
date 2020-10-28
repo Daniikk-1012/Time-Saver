@@ -40,6 +40,10 @@
     }
   }
   LabelStyle : {
+    boldestSmall : {
+      font : boldestSmall
+      fontColor : font
+    }
     boldestMedium : {
       font : boldestMedium
       fontColor : font

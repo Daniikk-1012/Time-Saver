@@ -44,6 +44,7 @@ public class HtmlScreen implements Screen, Localizable {
             public void changed(ChangeEvent event, Actor actor) {
                 game.initSounds();
                 game.applyMusicVolume();
+                game.menuMusic.play();
                 game.setScreen(game.menuScreen);
             }
         });

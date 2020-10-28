@@ -175,6 +175,7 @@ public class GameScreen implements Screen, Localizable {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.menuMusic.play();
                 game.setScreen(game.menuScreen);
             }
         });
@@ -336,6 +337,7 @@ public class GameScreen implements Screen, Localizable {
         victoryMenuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.menuMusic.play();
                 game.setScreen(game.menuScreen);
             }
         });

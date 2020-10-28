@@ -3,24 +3,20 @@ package com.wgsoft.game.timesaver.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.timesaver.Localizable;
+import com.wgsoft.game.timesaver.objects.ShadowActor;
 
 import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class MenuScreen implements Screen, Localizable {
-    public static final float COLOR_CHANGE_DURATION = 5f;
     public static final float BUTTON_PADDING = 50f;
 
     private final Stage backgroundStage;
@@ -29,6 +25,7 @@ public class MenuScreen implements Screen, Localizable {
     private final InputMultiplexer inputMultiplexer;
 
     private final TextButton startButton;
+    private final TextButton tutorialButton;
     private final TextButton exitButton;
 
     public MenuScreen(){
@@ -39,35 +36,9 @@ public class MenuScreen implements Screen, Localizable {
 
         inputMultiplexer = new InputMultiplexer(uiStage, backgroundStage);
 
-        Actor backgroundActor = new Actor(){
-            @Override
-            public void act(float delta) {
-                setSize(getStage().getWidth(), getStage().getHeight());
-                super.act(delta);
-            }
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                batch.draw(game.skin.getRegion("menu/background"), getX(), getY(), getWidth(), getHeight());
-            }
-        };
-        backgroundStage.addActor(backgroundActor);
-
-        Actor shadowActor = new Actor(){
-            @Override
-            public void act(float delta) {
-                setSize(getStage().getWidth(), getStage().getHeight());
-                super.act(delta);
-            }
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                batch.setColor(getColor());
-                batch.draw(game.skin.getRegion("menu/shadow"), getX(), getY(), getWidth(), getHeight());
-                batch.setColor(1f, 1f, 1f, 1f);
-            }
-        };
-        shadowActor.setColor(Color.GREEN);
-        shadowActor.addAction(Actions.forever(Actions.sequence(Actions.color(Color.PURPLE, COLOR_CHANGE_DURATION, Interpolation.fade), Actions.color(Color.GREEN, COLOR_CHANGE_DURATION, Interpolation.fade))));
-        backgroundStage.addActor(shadowActor);
+        Image backgroundImage = new Image(game.skin, "background");
+        backgroundImage.setFillParent(true);
+        backgroundStage.addActor(backgroundImage);
 
         Table rootTable = new Table(game.skin);
         rootTable.setFillParent(true);
@@ -83,10 +54,22 @@ public class MenuScreen implements Screen, Localizable {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.gameScreen.createGame(0);
+                game.menuMusic.stop();
                 game.setScreen(game.gameScreen);
             }
         });
         rootTable.add(startButton).pad(BUTTON_PADDING);
+
+        rootTable.row();
+
+        tutorialButton = new TextButton("menu.tutorial", game.skin, "menuButton");
+        tutorialButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(game.tutorialScreen);
+            }
+        });
+        rootTable.add(tutorialButton).pad(BUTTON_PADDING);
 
         rootTable.row();
 
@@ -105,13 +88,14 @@ public class MenuScreen implements Screen, Localizable {
     @Override
     public void localize() {
         startButton.setText(game.bundle.get("menu.start"));
+        tutorialButton.setText(game.bundle.get("menu.tutorial"));
         exitButton.setText(game.bundle.get("menu.exit"));
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(inputMultiplexer);
-        game.menuMusic.play();
+        backgroundStage.addActor(ShadowActor.getInstance());
     }
 
     @Override
@@ -146,7 +130,6 @@ public class MenuScreen implements Screen, Localizable {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
-        game.menuMusic.stop();
     }
 
     @Override

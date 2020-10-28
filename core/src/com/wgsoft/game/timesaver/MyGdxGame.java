@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.PropertiesUtils;
 import com.wgsoft.game.timesaver.screens.GameScreen;
 import com.wgsoft.game.timesaver.screens.HtmlScreen;
 import com.wgsoft.game.timesaver.screens.MenuScreen;
+import com.wgsoft.game.timesaver.screens.TutorialScreen;
 
 import java.util.Locale;
 
@@ -62,6 +63,7 @@ public class MyGdxGame extends Game implements Localizable{
 	public HtmlScreen htmlScreen;
 	public MenuScreen menuScreen;
 	public GameScreen gameScreen;
+	public TutorialScreen tutorialScreen;
 
 	public MyGdxGame(){
 		game = this;
@@ -103,12 +105,14 @@ public class MyGdxGame extends Game implements Localizable{
 		htmlScreen = new HtmlScreen();
 		menuScreen = new MenuScreen();
 		gameScreen = new GameScreen();
+		tutorialScreen = new TutorialScreen();
 
 		init();
 
 		if(Gdx.app.getType() == Application.ApplicationType.WebGL){
 			setScreen(htmlScreen);
 		}else {
+			game.menuMusic.play();
 			setScreen(menuScreen);
 		}
 	}
@@ -140,6 +144,7 @@ public class MyGdxGame extends Game implements Localizable{
 		htmlScreen.localize();
 		menuScreen.localize();
 		gameScreen.localize();
+		tutorialScreen.localize();
 	}
 
 	private void init(){
@@ -213,5 +218,6 @@ public class MyGdxGame extends Game implements Localizable{
 		htmlScreen.dispose();
 		menuScreen.dispose();
 		gameScreen.dispose();
+		tutorialScreen.dispose();
 	}
 }
