@@ -376,7 +376,7 @@ public class GameScreen implements Screen, Localizable {
             ((OrthographicCamera)gameStage.getCamera()).zoom = CUT_SCENE_ZOOM;
             barTable.invalidate();
             barTable.validate();
-            Gdx.input.setInputProcessor(null);
+            gameStage.setKeyboardFocus(null);
             uiStage.getRoot().setColor(1f, 1f, 1f, 0f);
             final Action animateAction = new Action() {
                 @Override
@@ -432,7 +432,7 @@ public class GameScreen implements Screen, Localizable {
             }), Actions.addAction(Actions.alpha(0f), barStage.getRoot()), Actions.run(new Runnable() {
                 @Override
                 public void run() {
-                    Gdx.input.setInputProcessor(inputMultiplexer);
+                    gameStage.setKeyboardFocus(player);
                 }
             })));
             gameStage.addAction(new Action() {
