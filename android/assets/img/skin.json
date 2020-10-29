@@ -23,6 +23,11 @@
     }
   }
   BitmapFont : {
+    mediumMedium : {
+      file : fnt/medium.fnt
+      scaledSize : 45
+      markupEnabled : true
+    }
     boldestSmall : {
       file : fnt/boldest.fnt
       scaledSize : 25
@@ -58,6 +63,10 @@
     }
   }
   TextButtonStyle : {
+    storyButton : {
+      font : mediumMedium
+      up : story/background
+    }
     boldestMedium : {
       font : boldestMedium
       fontColor : font

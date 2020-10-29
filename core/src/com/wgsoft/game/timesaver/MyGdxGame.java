@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.PropertiesUtils;
 import com.wgsoft.game.timesaver.screens.GameScreen;
 import com.wgsoft.game.timesaver.screens.HtmlScreen;
 import com.wgsoft.game.timesaver.screens.MenuScreen;
+import com.wgsoft.game.timesaver.screens.StoryScreen;
 import com.wgsoft.game.timesaver.screens.TutorialScreen;
 
 import java.util.Locale;
@@ -64,6 +65,7 @@ public class MyGdxGame extends Game implements Localizable{
 	public MenuScreen menuScreen;
 	public GameScreen gameScreen;
 	public TutorialScreen tutorialScreen;
+	public StoryScreen storyScreen;
 
 	public MyGdxGame(){
 		game = this;
@@ -106,6 +108,7 @@ public class MyGdxGame extends Game implements Localizable{
 		menuScreen = new MenuScreen();
 		gameScreen = new GameScreen();
 		tutorialScreen = new TutorialScreen();
+		storyScreen = new StoryScreen();
 
 		init();
 
@@ -113,7 +116,13 @@ public class MyGdxGame extends Game implements Localizable{
 			setScreen(htmlScreen);
 		}else {
 			game.menuMusic.play();
-			setScreen(menuScreen);
+			if(prefs.getBoolean("story", true)) {
+				setScreen(storyScreen);
+				prefs.putBoolean("story", false);
+				prefs.flush();
+			}else{
+				setScreen(menuScreen);
+			}
 		}
 	}
 
@@ -145,6 +154,7 @@ public class MyGdxGame extends Game implements Localizable{
 		menuScreen.localize();
 		gameScreen.localize();
 		tutorialScreen.localize();
+		storyScreen.localize();
 	}
 
 	private void init(){
@@ -219,5 +229,6 @@ public class MyGdxGame extends Game implements Localizable{
 		menuScreen.dispose();
 		gameScreen.dispose();
 		tutorialScreen.dispose();
+		storyScreen.dispose();
 	}
 }
