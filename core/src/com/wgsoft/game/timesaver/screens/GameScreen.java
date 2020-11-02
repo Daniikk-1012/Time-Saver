@@ -192,7 +192,12 @@ public class GameScreen implements Screen, Localizable {
         topTable.add(timeProgressBar).expandX().padTop(BUTTON_PADDING_TOP);
 
         settingsButton = new TextButton("game.settings", game.skin, "boldestMedium");
-        settingsButton.setVisible(false); //TODO Create settings
+        settingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(game.settingsScreen);
+            }
+        });
         topTable.add(settingsButton).padRight(BUTTON_PADDING_HORIZONTAL).padTop(BUTTON_PADDING_TOP).right();
 
         topTable.row();
@@ -365,7 +370,7 @@ public class GameScreen implements Screen, Localizable {
         this.level = level;
         maxTime = Player.TIME_MAX_DEFAULT;
         player = null;
-        game.timeFillSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+        game.timeFillSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
         uiStage.getRoot().setColor(1f, 1f, 1f, 1f);
         uiStage.getRoot().setTouchable(Touchable.childrenOnly);
         victoryStage.getRoot().setColor(1f, 1f, 1f, 0f);
@@ -575,7 +580,7 @@ public class GameScreen implements Screen, Localizable {
                 }, Actions.run(new Runnable() {
                     @Override
                     public void run() {
-                        game.hatchSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+                        game.hatchSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
                         hatch.addAction(Actions.moveBy(-hatch.getWidth(), 0f, Hatch.MOVE_DURATION, Interpolation.fade));
                     }
                 }), Actions.delay(Hatch.MOVE_DURATION, Actions.sequence(Actions.run(new Runnable() {
@@ -628,14 +633,14 @@ public class GameScreen implements Screen, Localizable {
         gameStage.act(delta);
         if(player.getStage() == null || !finishing && player.getTime() < 0f){
             if(player.getStage() != null) {
-                game.timeOverSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+                game.timeOverSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
             }
             timeOverStage.getRoot().clearActions();
             timeOverStage.addAction(Actions.sequence(Actions.alpha(1f), Actions.alpha(0f, TIME_OVER_ANIMATION_DURATION, Interpolation.fade)));
             timeOverStage.addAction(Actions.delay(TIME_FILL_SOUND_DELAY, Actions.run(new Runnable() {
                 @Override
                 public void run() {
-                    game.respawnSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+                    game.respawnSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
                 }
             })));
             if(player.getStage() == null){

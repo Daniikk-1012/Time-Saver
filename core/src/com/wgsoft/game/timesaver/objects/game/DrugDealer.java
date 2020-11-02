@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.wgsoft.game.timesaver.screens.GameScreen;
+import com.wgsoft.game.timesaver.screens.SettingsScreen;
 
 import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
@@ -70,7 +71,7 @@ public class DrugDealer extends Actor implements Monster {
 
     private void die(){
         setAnimation(dieAnimation);
-        game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+        game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
         player.addMaxTime(DEATH_MAX_TIME_BONUS);
         if(label != null) {
             label.remove();

@@ -14,8 +14,10 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -24,6 +26,7 @@ import com.badlogic.gdx.utils.PropertiesUtils;
 import com.wgsoft.game.timesaver.screens.GameScreen;
 import com.wgsoft.game.timesaver.screens.HtmlScreen;
 import com.wgsoft.game.timesaver.screens.MenuScreen;
+import com.wgsoft.game.timesaver.screens.SettingsScreen;
 import com.wgsoft.game.timesaver.screens.StoryScreen;
 import com.wgsoft.game.timesaver.screens.TutorialScreen;
 
@@ -32,8 +35,6 @@ import java.util.Locale;
 public class MyGdxGame extends Game implements Localizable{
 	public static final float SCREEN_WIDTH = 1920f;
 	public static final float SCREEN_HEIGHT = 1080f;
-	public static final float SOUND_DEFAULT = 0.5f;
-	public static final float MUSIC_DEFAULT = 0.5f;
 
 	public static MyGdxGame game;
 
@@ -66,6 +67,7 @@ public class MyGdxGame extends Game implements Localizable{
 	public GameScreen gameScreen;
 	public TutorialScreen tutorialScreen;
 	public StoryScreen storyScreen;
+	public SettingsScreen settingsScreen;
 
 	public MyGdxGame(){
 		game = this;
@@ -87,8 +89,14 @@ public class MyGdxGame extends Game implements Localizable{
 				region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 			}
 		}
+		BaseDrawable baseDrawable = new BaseDrawable();
 		skin.get("time", ProgressBar.ProgressBarStyle.class).knobBefore = skin.getTiledDrawable("progress-bar/time/knob-before");
-		skin.get("time", ProgressBar.ProgressBarStyle.class).knob = new BaseDrawable();
+		skin.get("time", ProgressBar.ProgressBarStyle.class).knob = baseDrawable;
+		skin.get("sound", Slider.SliderStyle.class).knobBefore = skin.getTiledDrawable("slider/sound/knob-before");
+		skin.get("sound", Slider.SliderStyle.class).knob = baseDrawable;
+		skin.get("music", Slider.SliderStyle.class).knobBefore = skin.getTiledDrawable("slider/music/knob-before");
+		skin.get("music", Slider.SliderStyle.class).knob = baseDrawable;
+		skin.get("list", List.ListStyle.class).selection = baseDrawable;
 		properties = new ObjectMap<>();
 		try {
 			PropertiesUtils.load(properties, Gdx.files.internal("bundle/properties.properties").reader());
@@ -109,6 +117,7 @@ public class MyGdxGame extends Game implements Localizable{
 		gameScreen = new GameScreen();
 		tutorialScreen = new TutorialScreen();
 		storyScreen = new StoryScreen();
+		settingsScreen = new SettingsScreen();
 
 		init();
 
@@ -144,8 +153,8 @@ public class MyGdxGame extends Game implements Localizable{
 	}
 
 	public void applyMusicVolume(){
-		menuMusic.setVolume(prefs.getFloat("settings.music", MUSIC_DEFAULT));
-		commonMusic.setVolume(prefs.getFloat("settings.music", MUSIC_DEFAULT));
+		menuMusic.setVolume(prefs.getFloat("settings.music", SettingsScreen.MUSIC_DEFAULT));
+		commonMusic.setVolume(prefs.getFloat("settings.music", SettingsScreen.MUSIC_DEFAULT));
 	}
 
 	@Override
@@ -155,9 +164,10 @@ public class MyGdxGame extends Game implements Localizable{
 		gameScreen.localize();
 		tutorialScreen.localize();
 		storyScreen.localize();
+		settingsScreen.localize();
 	}
 
-	private void init(){
+	public void init(){
 		if(prefs.getBoolean("firstRun", true)){
 			initBundle(null, null, null);
 			if(bundle.getLocale().getCountry().equals("")) {
@@ -230,5 +240,6 @@ public class MyGdxGame extends Game implements Localizable{
 		gameScreen.dispose();
 		tutorialScreen.dispose();
 		storyScreen.dispose();
+		settingsScreen.dispose();
 	}
 }

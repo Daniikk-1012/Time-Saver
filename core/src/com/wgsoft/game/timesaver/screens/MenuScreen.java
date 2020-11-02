@@ -17,7 +17,7 @@ import com.wgsoft.game.timesaver.objects.ShadowActor;
 import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class MenuScreen implements Screen, Localizable {
-    public static final float BUTTON_PADDING = 50f;
+    public static final float BUTTON_PADDING = 25f;
 
     private final Stage backgroundStage;
     private final Stage uiStage;
@@ -26,6 +26,7 @@ public class MenuScreen implements Screen, Localizable {
 
     private final TextButton startButton;
     private final TextButton tutorialButton;
+    private final TextButton settingsButton;
     private final TextButton exitButton;
 
     public MenuScreen(){
@@ -73,6 +74,17 @@ public class MenuScreen implements Screen, Localizable {
 
         rootTable.row();
 
+        settingsButton = new TextButton("menu.settings", game.skin, "menuButton");
+        settingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(game.settingsScreen);
+            }
+        });
+        rootTable.add(settingsButton).pad(BUTTON_PADDING);
+
+        rootTable.row();
+
         exitButton = new TextButton("menu.exit", game.skin, "menuButton");
         exitButton.addListener(new ChangeListener() {
             @Override
@@ -89,6 +101,7 @@ public class MenuScreen implements Screen, Localizable {
     public void localize() {
         startButton.setText(game.bundle.get("menu.start"));
         tutorialButton.setText(game.bundle.get("menu.tutorial"));
+        settingsButton.setText(game.bundle.get("menu.settings"));
         exitButton.setText(game.bundle.get("menu.exit"));
     }
 

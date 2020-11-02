@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.wgsoft.game.timesaver.screens.GameScreen;
+import com.wgsoft.game.timesaver.screens.SettingsScreen;
 
 import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
@@ -173,14 +174,14 @@ public class Player extends Actor {
     public void setPlayerItem(PlayerItem playerItem){
         if(this.playerItem != playerItem){
             this.playerItem = playerItem;
-            game.selectSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+            game.selectSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
         }
     }
 
     public void die(){
         setAnimations(dieAnimations);
         addAction(Actions.delay(currentAnimations.get(Math.round(time / maxTime * FULLNESS_LEVEL_MAX)).getAnimationDuration(), Actions.removeActor()));
-        game.deathSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+        game.deathSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
     }
 
     public boolean isNotAttacking(){
@@ -226,7 +227,7 @@ public class Player extends Actor {
         if(attackTime <= 0f) {
             playerStates.clear();
             attackTime = ATTACK_DURATION;
-            game.slashSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+            game.slashSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
             attackParticleEffects.add(game.attackParticleEffectPool.obtain());
         }
     }
@@ -246,7 +247,7 @@ public class Player extends Actor {
         if(ground) {
             velocity = JUMP_IMPULSE;
             ground = false;
-            game.jumpSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+            game.jumpSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
         }
     }
 

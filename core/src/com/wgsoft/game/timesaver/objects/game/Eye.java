@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
+import com.wgsoft.game.timesaver.screens.SettingsScreen;
 
 import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
@@ -66,7 +67,7 @@ public class Eye extends Actor implements Monster {
 
     private void die(){
         setAnimation(dieAnimation);
-        game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SOUND_DEFAULT));
+        game.monsterDeathSound.play(game.prefs.getFloat("settings.sound", SettingsScreen.SOUND_DEFAULT));
         bloodParticleEffect.allowCompletion();
         player.addMaxTime(DEATH_MAX_TIME_BONUS);
     }

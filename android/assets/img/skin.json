@@ -43,6 +43,11 @@
       scaledSize : 80
       markupEnabled : true
     }
+    selectBoxFont : {
+      file : fnt/boldest.fnt
+      scaledSize : 35
+      markupEnabled : true
+    }
   }
   LabelStyle : {
     boldestSmall : {
@@ -95,6 +100,40 @@
       font : boldestMedium
       checkboxOn : check-box/inventory/on
       checkboxOff : check-box/inventory/off
+    }
+  }
+
+  ListStyle : {
+    list : {
+      font : selectBoxFont
+      fontColorSelected : down
+      fontColorUnselected : font
+    }
+  }
+
+  ScrollPaneStyle : {
+    language : {
+      background : select-box/scroll-pane/background
+    }
+  }
+
+  SelectBoxStyle : {
+    language : {
+      background : select-box/background
+      backgroundOpen : select-box/background-open
+      listStyle : list
+      scrollStyle : language
+      font : selectBoxFont
+      fontColor : font
+    }
+  }
+
+  SliderStyle : {
+    sound : {
+      background : slider/background
+    }
+    music : {
+      background : slider/background
     }
   }
 }
