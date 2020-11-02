@@ -1,0 +1,139 @@
+{
+  Color : {
+    font : {
+      hex : #eeeeee
+    }
+    over : {
+      hex: #234c90
+    }
+    down : {
+      hex : #103167
+    }
+    menuFont : {
+      hex : #00ffd9
+    }
+    black : {
+      hex : #000000
+    }
+  }
+  TintedDrawable : {
+    black : {
+      name : pixel
+      color : black
+    }
+  }
+  BitmapFont : {
+    mediumMedium : {
+      file : fnt/medium.fnt
+      scaledSize : 45
+      markupEnabled : true
+    }
+    boldestSmall : {
+      file : fnt/boldest.fnt
+      scaledSize : 25
+      markupEnabled : true
+    }
+    boldestMedium : {
+      file : fnt/boldest.fnt
+      scaledSize : 45
+      markupEnabled : true
+    }
+    boldestLarge : {
+      file : fnt/boldest.fnt
+      scaledSize : 80
+      markupEnabled : true
+    }
+    selectBoxFont : {
+      file : fnt/boldest.fnt
+      scaledSize : 35
+      markupEnabled : true
+    }
+  }
+  LabelStyle : {
+    boldestSmall : {
+      font : boldestSmall
+      fontColor : font
+    }
+    boldestMedium : {
+      font : boldestMedium
+      fontColor : font
+    }
+    boldestLarge : {
+      font : boldestLarge
+      fontColor : font
+    }
+    gameLabel : {
+      font : boldestSmall
+      background : game/text-background
+    }
+  }
+  TextButtonStyle : {
+    storyButton : {
+      font : mediumMedium
+      up : story/background
+    }
+    boldestMedium : {
+      font : boldestMedium
+      fontColor : font
+      overFontColor : over
+      downFontColor : down
+    }
+    menuButton : {
+      font : boldestMedium
+      fontColor : menuFont
+      overFontColor : over
+      downFontColor : down
+    }
+    boldestLarge : {
+      font : boldestLarge
+      fontColor : font
+      overFontColor : over
+      downFontColor : down
+      up : html/shadow
+    }
+  }
+  ProgressBarStyle : {
+    time : {}
+  }
+  CheckBoxStyle : {
+    inventory : {
+      font : boldestMedium
+      checkboxOn : check-box/inventory/on
+      checkboxOff : check-box/inventory/off
+    }
+  }
+
+  ListStyle : {
+    list : {
+      font : selectBoxFont
+      fontColorSelected : down
+      fontColorUnselected : font
+    }
+  }
+
+  ScrollPaneStyle : {
+    language : {
+      background : select-box/scroll-pane/background
+    }
+  }
+
+  SelectBoxStyle : {
+    language : {
+      background : select-box/background
+      backgroundOpen : select-box/background-open
+      listStyle : list
+      scrollStyle : language
+      font : selectBoxFont
+      fontColor : font
+    }
+  }
+
+  SliderStyle : {
+    sound : {
+      background : slider/background
+    }
+    music : {
+      background : slider/background
+    }
+  }
+}
