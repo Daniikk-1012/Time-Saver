@@ -3,20 +3,23 @@ package com.wgsoft.game.timesaver.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.wgsoft.game.timesaver.MyGdxGame;
+import com.wgsoft.game.timesaver.screens.SettingsScreen;
 
 public class HtmlLauncher extends GwtApplication {
 
         @Override
         public GwtApplicationConfiguration getConfig () {
-                // Resizable application, uses available space in browser
                 return new GwtApplicationConfiguration(true);
-                // Fixed size application:
-                //return new GwtApplicationConfiguration(480, 320);
         }
 
         @Override
         public ApplicationListener createApplicationListener () {
-                return new MyGdxGame();
+                String[] localeNames = new String[SettingsScreen.LANGUAGES.length];
+                for(int i = 0; i < localeNames.length; i++){
+                        localeNames[i] = LocaleInfo.getLocaleNativeDisplayName(SettingsScreen.LANGUAGES[i]);
+                }
+                return new MyGdxGame(localeNames);
         }
 }

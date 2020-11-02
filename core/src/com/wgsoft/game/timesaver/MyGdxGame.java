@@ -69,8 +69,9 @@ public class MyGdxGame extends Game implements Localizable{
 	public StoryScreen storyScreen;
 	public SettingsScreen settingsScreen;
 
-	public MyGdxGame(){
+	public MyGdxGame(String[] localeNames){
 		game = this;
+		SettingsScreen.setLocaleNames(localeNames);
 	}
 
 	@Override

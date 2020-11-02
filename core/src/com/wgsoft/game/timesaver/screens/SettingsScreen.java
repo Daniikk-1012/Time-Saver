@@ -17,8 +17,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.wgsoft.game.timesaver.Localizable;
 import com.wgsoft.game.timesaver.objects.ShadowActor;
 
-import java.util.Locale;
-
 import static com.wgsoft.game.timesaver.MyGdxGame.*;
 
 public class SettingsScreen implements Screen, Localizable {
@@ -34,6 +32,8 @@ public class SettingsScreen implements Screen, Localizable {
             "en",
             "ru_RU"
     };
+
+    private static String[] localesNames;
 
     private final Stage backgroundStage;
     private final Stage uiStage;
@@ -106,17 +106,8 @@ public class SettingsScreen implements Screen, Localizable {
         languageSelectBox.setAlignment(Align.center);
         languageSelectBox.getList().setAlignment(Align.center);
         languageSelectBox.setMaxListCount(LIST_COUNT_MAX);
-        for (String language : LANGUAGES) {
-            String[] localeString = language.split("_");
-            Locale locale;
-            if (localeString.length == 1) {
-                locale = new Locale(localeString[0]);
-            } else if (localeString.length == 2) {
-                locale = new Locale(localeString[0], localeString[1]);
-            } else {
-                locale = new Locale(localeString[0], localeString[1], localeString[2]);
-            }
-            languageSelectBox.getItems().add(locale.getDisplayName(locale));
+        for (String localesName : localesNames) {
+            languageSelectBox.getItems().add(localesName);
         }
         languageSelectBox.setItems(languageSelectBox.getItems());
         settingsTable.add(languageSelectBox).pad(SETTINGS_PADDING);
@@ -150,6 +141,10 @@ public class SettingsScreen implements Screen, Localizable {
         rootTable.add(acceptButton).expandX();
 
         uiStage.addActor(rootTable);
+    }
+
+    public static void setLocaleNames(String[] localesNames){
+        SettingsScreen.localesNames = localesNames;
     }
 
     @Override
