@@ -382,6 +382,7 @@ public class GameScreen implements Screen, Localizable {
             barTable.invalidate();
             barTable.validate();
             gameStage.setKeyboardFocus(null);
+            uiStage.getRoot().setTouchable(Touchable.disabled);
             uiStage.getRoot().setColor(1f, 1f, 1f, 0f);
             final Action animateAction = new Action() {
                 @Override
@@ -438,6 +439,7 @@ public class GameScreen implements Screen, Localizable {
                 @Override
                 public void run() {
                     gameStage.setKeyboardFocus(player);
+                    uiStage.getRoot().setTouchable(Touchable.childrenOnly);
                 }
             })));
             gameStage.addAction(new Action() {
