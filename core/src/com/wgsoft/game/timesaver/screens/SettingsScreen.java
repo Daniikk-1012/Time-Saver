@@ -31,7 +31,8 @@ public class SettingsScreen implements Screen, Localizable {
     public static final float LABEL_PADDING = 50f;
 
     public static final String[] LANGUAGES = new String[]{
-            "en"
+            "en",
+            "ru_RU"
     };
 
     private final Stage backgroundStage;
