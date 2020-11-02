@@ -10,7 +10,7 @@ buildscript {
     dependencies {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.0.9'
         classpath 'com.android.tools.build:gradle:3.4.1'
-        classpath "com.badlogicgames.gdx:gdx-tools:1.9.12-SNAPSHOT"
+        classpath "com.badlogicgames.gdx:gdx-tools:1.9.12"
     }
 }
 
@@ -55,7 +55,7 @@ allprojects {
     version = '1.0-beta.8-dev'
     ext {
         appName = "Time Saver"
-        gdxVersion = '1.9.12-SNAPSHOT'
+        gdxVersion = '1.9.12'
         roboVMVersion = '2.3.10'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
